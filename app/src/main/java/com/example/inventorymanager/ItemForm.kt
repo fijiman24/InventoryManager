@@ -115,7 +115,7 @@ class ItemForm : AppCompatActivity() {
             Inventory.items.add(InventoryItem(itemName, itemStockAmount))
 
             // Save inventory data
-            fileStorage.saveListToFile(Inventory.items, "inventoryFile")
+            Inventory.saveInventoryToFile(fileStorage)
 
             // Return to MainActivity
             val intent = Intent(this, InventoryManager::class.java)
@@ -139,7 +139,7 @@ class ItemForm : AppCompatActivity() {
             Inventory.replaceItemById(item.id, itemName, itemStockAmount)
 
             // Save inventory data
-            fileStorage.saveListToFile(Inventory.items, "inventoryFile")
+            Inventory.saveInventoryToFile(fileStorage)
 
             // Return to MainActivity
             val intent = Intent(this, InventoryManager::class.java)
@@ -156,7 +156,7 @@ class ItemForm : AppCompatActivity() {
         Inventory.removeItemById(item.id)
 
         // Save inventory data
-        fileStorage.saveListToFile(Inventory.items, "inventoryFile")
+        Inventory.saveInventoryToFile(fileStorage)
 
         // Return to MainActivity
         val intent = Intent(this, InventoryManager::class.java)

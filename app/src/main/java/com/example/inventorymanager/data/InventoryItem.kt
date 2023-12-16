@@ -13,4 +13,20 @@ class InventoryItem(
     val itemName: String,
     var itemStock: Int,
     val id: String = UUID.randomUUID().toString(),
-) : Serializable
+) : Serializable {
+    /**
+     * Increment item stock.
+     */
+    fun incrementStock() {
+        itemStock++
+    }
+
+    /**
+     * Decrement item stock, cannot be less than zero.
+     */
+    fun decrementStock() {
+        if (itemStock > 0) {
+            itemStock--
+        }
+    }
+}

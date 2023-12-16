@@ -10,16 +10,23 @@ import android.view.View.MeasureSpec
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
-import com.example.inventorymanager.ItemListAdapter
-import com.example.inventorymanager.databinding.ViewStickyHeaderBinding
+import com.example.inventorymanager.ItemCategoryListAdapter
+import com.example.inventorymanager.databinding.StickyHeaderBinding
 
-class StickyHeaderDecoration(private val adapter: ItemListAdapter, root: View) : ItemDecoration() {
-
-    private val headerBinding by lazy { ViewStickyHeaderBinding.inflate(LayoutInflater.from(root.context)) }
+/**
+ * Sticky header for item categories.
+ *
+ * Source:
+ * https://medium.com/swlh/android-recyclerview-stickyheader-without-external-library-25845ec3e20f
+ * https://github.com/bigyanthapa/Sample-Sticky-Header
+ */
+class StickyHeaderDecoration(private val adapter: ItemCategoryListAdapter, root: View) : ItemDecoration() {
+    private val headerBinding
+            by lazy { StickyHeaderBinding.inflate(LayoutInflater.from(root.context)) }
     private val headerView: View get() = headerBinding.root
 
     /**
-     *
+     * Draw the sticky header view on the provided Canvas.
      */
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: State) {
         super.onDrawOver(canvas, parent, state)
@@ -30,15 +37,13 @@ class StickyHeaderDecoration(private val adapter: ItemListAdapter, root: View) :
         parent.getChildAdapterPosition(topChild).let { topChildPosition ->
             val header = adapter.getHeaderForCurrentPosition(topChildPosition)
             headerBinding.tvStickyHeader.text = header.toString()
-
             layoutHeaderView(topChild)
-
             canvas.drawHeaderView(topChild, secondChild)
         }
     }
 
     /**
-     *
+     * Position and size a header view based on the dimensions of a given top view.
      */
     private fun layoutHeaderView(topView: View?) {
         topView?.let {
@@ -51,7 +56,7 @@ class StickyHeaderDecoration(private val adapter: ItemListAdapter, root: View) :
     }
 
     /**
-     *
+     * Draw a header view above other content
      */
     private fun Canvas.drawHeaderView(topView: View?, secondChild: View?) {
         save()
@@ -61,7 +66,7 @@ class StickyHeaderDecoration(private val adapter: ItemListAdapter, root: View) :
     }
 
     /**
-     *
+     * Convert dp to pixels.
      */
     private fun getPixels(dipValue: Int, context: Context): Int {
         val r: Resources = context.resources
@@ -71,7 +76,7 @@ class StickyHeaderDecoration(private val adapter: ItemListAdapter, root: View) :
     }
 
     /**
-     *
+     * Determine the vertical offset at which a header view should be drawn on a canvas.
      */
     private fun calculateHeaderTop(topView: View?, secondChild: View?): Float =
         secondChild?.let { secondView ->

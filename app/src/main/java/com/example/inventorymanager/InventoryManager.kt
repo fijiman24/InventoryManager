@@ -11,17 +11,16 @@ import com.example.inventorymanager.data.Inventory
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ActivityMainBinding
 import com.example.inventorymanager.utils.FileStorage
-import com.example.inventorymanager.utils.RecyclerViewInterface
 import com.example.inventorymanager.utils.StickyHeaderDecoration
 
 /**
  * List of inventory items.
  */
-class InventoryManager : AppCompatActivity(), RecyclerViewInterface {
+class InventoryManager : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var value: TextView
-    private lateinit var itemListAdapter: ItemListAdapter
+    private lateinit var itemCategoryListAdapter: ItemCategoryListAdapter
     private val inventory: Inventory = Inventory
     private val fileStorage: FileStorage = FileStorage(this)
 
@@ -38,35 +37,27 @@ class InventoryManager : AppCompatActivity(), RecyclerViewInterface {
             binding.inventoryEmptyMessage.text = ""
         }
 
+        // Retrieve the MutableList from internal storage
+        Inventory.items = fileStorage.getListFromFile("inventoryFile")
+
+        // Set RecyclerView adapter
+        itemCategoryListAdapter = ItemCategoryListAdapter()
+        val recyclerView: RecyclerView = binding.rvInventoryItems
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = itemCategoryListAdapter
+
+        // Group items by category
+        val groupedItems: Map<Char, List<InventoryItem>> =
+            inventory.items.groupBy { item -> item.itemName.first().uppercaseChar() }.toSortedMap()
+        itemCategoryListAdapter.itemData = groupedItems.toSortedMap()
+
+        // Sticky headers
+        recyclerView.addItemDecoration(StickyHeaderDecoration(itemCategoryListAdapter, binding.root))
+
         // On-click for floating action button
         binding.fab.setOnClickListener {
             val intent = Intent(this, ItemForm::class.java)
             startActivity(intent)
         }
-
-        // Retrieve the MutableList from internal storage
-        Inventory.items = fileStorage.getListFromFile("inventoryFile")
-        // Group items by category
-        val groupedItems: Map<Char, List<InventoryItem>> = inventory.items.groupBy { item -> item.itemName.first().toUpperCase() }.toSortedMap()
-
-        // Recycler view
-        val recyclerView: RecyclerView = findViewById(R.id.rvInventoryItems)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.setHasFixedSize(true)
-        itemListAdapter = ItemListAdapter(inventory.items, this)
-        recyclerView.adapter = itemListAdapter
-
-        // Sticky headers
-        recyclerView.addItemDecoration(StickyHeaderDecoration(itemListAdapter, binding.root))
-    }
-
-    /**
-     * Edit inventory item.
-     */
-    override fun onItemClick(position: Int) {
-        val item: InventoryItem = inventory.items[position]
-        val intent = Intent(this, ItemForm::class.java)
-        intent.putExtra("item", item)
-        startActivity(intent)
     }
 }

@@ -23,10 +23,10 @@
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="A" />
+            tools:text="Item Category" />
 
-        <com.example.inventorymanager.view.ItemDetailsComponentView
-            android:id="@+id/bookDetailsView"
+        <com.example.inventorymanager.view.ItemsByCategoryView
+            android:id="@+id/itemsView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
