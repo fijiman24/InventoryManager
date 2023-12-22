@@ -26,9 +26,14 @@ object Inventory {
     /**
      * Replace an existing item from inventory by its ID.
      */
-    fun replaceItemById(itemId: String, newItemName: String, newItemStock: Int) {
+    fun replaceItemById(
+        itemId: String,
+        newItemName: String,
+        newItemStock: Int,
+        newItemCategory: String
+    ) {
         val existingItemIndex = items.indexOfFirst { it.id == itemId }
-        val editedItem = InventoryItem(newItemName, newItemStock)
+        val editedItem = InventoryItem(newItemName, newItemStock, newItemCategory)
         items[existingItemIndex] = editedItem
     }
 }

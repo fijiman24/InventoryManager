@@ -6,27 +6,28 @@ import java.util.UUID
 /**
  * Class representing an inventory item.
  *
- * @param itemName name of item
- * @param itemStock amount of item
+ * @param name name of item
+ * @param stock amount of item
  */
 class InventoryItem(
-    val itemName: String,
-    var itemStock: Int,
+    val name: String,
+    var stock: Int,
+    var category: String,
     val id: String = UUID.randomUUID().toString(),
 ) : Serializable {
     /**
      * Increment item stock.
      */
     fun incrementStock() {
-        itemStock++
+        stock++
     }
 
     /**
      * Decrement item stock, cannot be less than zero.
      */
     fun decrementStock() {
-        if (itemStock > 0) {
-            itemStock--
+        if (stock > 0) {
+            stock--
         }
     }
 }

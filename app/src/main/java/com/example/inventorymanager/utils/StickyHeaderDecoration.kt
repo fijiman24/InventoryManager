@@ -20,9 +20,9 @@ import com.example.inventorymanager.databinding.StickyHeaderBinding
  * https://medium.com/swlh/android-recyclerview-stickyheader-without-external-library-25845ec3e20f
  * https://github.com/bigyanthapa/Sample-Sticky-Header
  */
-class StickyHeaderDecoration(private val adapter: ItemCategoryListAdapter, root: View) : ItemDecoration() {
-    private val headerBinding
-            by lazy { StickyHeaderBinding.inflate(LayoutInflater.from(root.context)) }
+class StickyHeaderDecoration(private val adapter: ItemCategoryListAdapter, root: View) :
+    ItemDecoration() {
+    private val headerBinding by lazy { StickyHeaderBinding.inflate(LayoutInflater.from(root.context)) }
     private val headerView: View get() = headerBinding.root
 
     /**
@@ -36,7 +36,7 @@ class StickyHeaderDecoration(private val adapter: ItemCategoryListAdapter, root:
 
         parent.getChildAdapterPosition(topChild).let { topChildPosition ->
             val header = adapter.getHeaderForCurrentPosition(topChildPosition)
-            headerBinding.tvStickyHeader.text = header.toString()
+            headerBinding.tvStickyHeader.text = header
             layoutHeaderView(topChild)
             canvas.drawHeaderView(topChild, secondChild)
         }

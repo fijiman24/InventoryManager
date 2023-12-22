@@ -11,9 +11,9 @@ import com.example.inventorymanager.databinding.ItemCategorySectionBinding
  */
 class ItemCategoryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var itemCategories: List<Char> = listOf()
+    private var itemCategories: List<String> = listOf()
 
-    var itemData: Map<Char, List<InventoryItem>> = emptyMap()
+    var itemData: Map<String, List<InventoryItem>> = emptyMap()
         set(value) {
             field = value
             // Make keys (i.e., item categories) the headers
@@ -52,8 +52,8 @@ class ItemCategoryListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         /**
          * Set category header and child items.
          */
-        fun bind(header: Char) {
-            viewBinding.tvHeader.text = "$header"
+        fun bind(header: String) {
+            viewBinding.tvHeader.text = header
             itemData[header]?.let { items ->
                 viewBinding.itemsView.items = items
             }

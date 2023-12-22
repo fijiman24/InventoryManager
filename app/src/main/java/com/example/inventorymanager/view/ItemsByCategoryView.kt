@@ -106,8 +106,8 @@ class ItemsByCategoryView : ConstraintLayout {
             }
 
             inventoryRowBinding.apply {
-                itemName.text = inventoryItem.itemName
-                itemStockValue.setText(inventoryItem.itemStock.toString())
+                itemName.text = inventoryItem.name
+                itemStockValue.setText(inventoryItem.stock.toString())
                 itemStockIncrementButton.setOnClickListener { onIncrementClick(inventoryItem) }
                 itemStockDecrementButton.setOnClickListener { onDecrementClick(inventoryItem) }
                 itemView.setOnClickListener { onItemClick(inventoryItem) }

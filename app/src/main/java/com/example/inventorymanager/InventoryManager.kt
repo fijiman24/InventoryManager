@@ -47,12 +47,16 @@ class InventoryManager : AppCompatActivity() {
         recyclerView.adapter = itemCategoryListAdapter
 
         // Group items by category
-        val groupedItems: Map<Char, List<InventoryItem>> =
-            inventory.items.groupBy { item -> item.itemName.first().uppercaseChar() }.toSortedMap()
+        val groupedItems: Map<String, List<InventoryItem>> =
+            inventory.items.groupBy { item -> item.category }.toSortedMap()
         itemCategoryListAdapter.itemData = groupedItems.toSortedMap()
 
         // Sticky headers
-        recyclerView.addItemDecoration(StickyHeaderDecoration(itemCategoryListAdapter, binding.root))
+        recyclerView.addItemDecoration(
+            StickyHeaderDecoration(
+                itemCategoryListAdapter, binding.root
+            )
+        )
 
         // On-click for floating action button
         binding.fab.setOnClickListener {

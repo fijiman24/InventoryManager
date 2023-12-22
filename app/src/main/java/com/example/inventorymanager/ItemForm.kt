@@ -32,9 +32,7 @@ class ItemForm : AppCompatActivity() {
         val spinner: Spinner = findViewById(R.id.itemCategorySpinner)
         // Create an ArrayAdapter using the string array and a default spinner layout.
         ArrayAdapter.createFromResource(
-            this,
-            R.array.inventory_category_array,
-            android.R.layout.simple_spinner_item
+            this, R.array.inventory_category_array, android.R.layout.simple_spinner_item
         ).also { adapter ->
             // Specify the layout to use when the list of choices appears.
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -46,8 +44,8 @@ class ItemForm : AppCompatActivity() {
         val itemToEdit = intent.getSerializableExtra("item") as? InventoryItem
         if (itemToEdit != null) {
             // Change form field text
-            binding.editItemName.setText(itemToEdit.itemName)
-            binding.editItemStock.setText(itemToEdit.itemStock.toString())
+            binding.editItemName.setText(itemToEdit.name)
+            binding.editItemStock.setText(itemToEdit.stock.toString())
 
             // Set on-click for delete button
             binding.deleteButton.setOnClickListener { deleteItem(itemToEdit) }
@@ -112,7 +110,7 @@ class ItemForm : AppCompatActivity() {
             val (itemName, itemStockAmount, itemCategory) = returnItemData()
 
             // Add item to inventory list
-            Inventory.items.add(InventoryItem(itemName, itemStockAmount))
+            Inventory.items.add(InventoryItem(itemName, itemStockAmount, itemCategory))
 
             // Save inventory data
             Inventory.saveInventoryToFile(fileStorage)
@@ -136,7 +134,7 @@ class ItemForm : AppCompatActivity() {
             val (itemName, itemStockAmount, itemCategory) = returnItemData()
 
             // Replace item
-            Inventory.replaceItemById(item.id, itemName, itemStockAmount)
+            Inventory.replaceItemById(item.id, itemName, itemStockAmount, itemCategory)
 
             // Save inventory data
             Inventory.saveInventoryToFile(fileStorage)

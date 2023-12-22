@@ -43,8 +43,7 @@ class FileStorage(private val context: Context) {
             val objectInputStream = ObjectInputStream(fileInputStream)
 
             // Read the list from the file
-            @Suppress("UNCHECKED_CAST")
-            resultList.addAll(objectInputStream.readObject() as MutableList<InventoryItem>)
+            @Suppress("UNCHECKED_CAST") resultList.addAll(objectInputStream.readObject() as MutableList<InventoryItem>)
 
             // Close the streams
             objectInputStream.close()
