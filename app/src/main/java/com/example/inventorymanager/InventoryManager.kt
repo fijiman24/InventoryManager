@@ -32,11 +32,6 @@ class InventoryManager : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        // Remove empty message if there are items
-        if (inventory.items.isNotEmpty()) {
-            binding.inventoryEmptyMessage.text = ""
-        }
-
         // Retrieve the MutableList from internal storage
         Inventory.items = fileStorage.getListFromFile("inventoryFile")
 
@@ -57,6 +52,11 @@ class InventoryManager : AppCompatActivity() {
                 itemCategoryListAdapter, binding.root
             )
         )
+
+        // Remove empty message if there are items
+        if (inventory.items.isNotEmpty()) {
+            binding.inventoryEmptyMessage.text = ""
+        }
 
         // On-click for floating action button
         binding.fab.setOnClickListener {
