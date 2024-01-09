@@ -27,7 +27,9 @@ class AddItemCategoryDialogFragment : DialogFragment() {
                     // Extract category string
                     val newCategory = binding.category.text.toString()
                     // Add string to categories
-                    InventoryCategories.categories.add(newCategory)
+                    if (newCategory.isNotEmpty()) {
+                        InventoryCategories.categories.add(newCategory)
+                    }
                     // Save new category list to file storage
                     val fileStorage = FileStorage(it)
                     InventoryCategories.saveCategoriesToFile(fileStorage)

@@ -37,7 +37,7 @@
             android:id="@+id/itemStockDecrementButton"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:background="@color/cadmiumRed"
+            android:background="@color/purplePrimary"
             android:src="@android:drawable/ic_input_add"
             android:text="@string/minus"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +62,7 @@
             android:id="@+id/itemStockIncrementButton"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:background="@color/cadmiumRed"
+            android:background="@color/purplePrimary"
             android:text="@string/plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
