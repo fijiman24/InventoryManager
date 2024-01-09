@@ -7,9 +7,12 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.example.inventorymanager.data.Inventory
+import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ItemFormBinding
+import com.example.inventorymanager.utils.AddItemCategoryDialogFragment
 import com.example.inventorymanager.utils.FileStorage
+
 
 /**
  * Form for adding a new inventory item.
@@ -25,20 +28,17 @@ class ItemForm : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        // Set on-click for save button
+        // Set initial on-click for save button
         binding.saveButton.setOnClickListener { saveNewItem() }
+
+        // Set on-click for add category button
+        binding.addCategoryButton.setOnClickListener { openAddCategoryDialog() }
 
         // Populate spinner with options
         val spinner: Spinner = findViewById(R.id.itemCategorySpinner)
-        // Create an ArrayAdapter using the string array and a default spinner layout.
-        ArrayAdapter.createFromResource(
-            this, R.array.inventory_category_array, android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            spinner.adapter = adapter
-        }
+        val adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, InventoryCategories.categories)
+        spinner.adapter = adapter
 
         // If there's an item, populate the text fields
         val itemToEdit = intent.getSerializableExtra("item") as? InventoryItem
@@ -47,10 +47,15 @@ class ItemForm : AppCompatActivity() {
             binding.editItemName.setText(itemToEdit.name)
             binding.editItemStock.setText(itemToEdit.stock.toString())
 
+            // Set category spinner
+            val categories = resources.getStringArray(R.array.inventory_category_array)
+            val categoryIndex = categories.indexOf(itemToEdit.category)
+            binding.itemCategorySpinner.setSelection(categoryIndex)
+
             // Set on-click for delete button
             binding.deleteButton.setOnClickListener { deleteItem(itemToEdit) }
 
-            // Reset on-click for save button
+            // Replace on-click for save button
             binding.saveButton.setOnClickListener {
                 saveEdit(itemToEdit)
             }
@@ -159,5 +164,13 @@ class ItemForm : AppCompatActivity() {
         // Return to MainActivity
         val intent = Intent(this, InventoryManager::class.java)
         startActivity(intent)
+    }
+
+    /**
+     * Open the add category alert dialog.
+     */
+    private fun openAddCategoryDialog() {
+        // Show the add category dialog
+        AddItemCategoryDialogFragment().show(supportFragmentManager, "ADD_CATEGORY_DIALOG")
     }
 }

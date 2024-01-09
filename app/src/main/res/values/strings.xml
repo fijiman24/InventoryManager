@@ -55,6 +55,8 @@
     <string name="category">Category</string>
     <string name="save_button">Save Button</string>
     <string name="delete_button">Delete button</string>
+    <string name="edit_image_button">Edit image button</string>
+    <string name="add_item_category_button">Add item category button</string>
     <string-array name="inventory_category_array">
         <item>Storage</item>
         <item>Fridge</item>

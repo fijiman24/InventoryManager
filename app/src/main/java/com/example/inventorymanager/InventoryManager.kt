@@ -8,6 +8,7 @@ import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inventorymanager.data.Inventory
+import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ActivityMainBinding
 import com.example.inventorymanager.utils.FileStorage
@@ -32,8 +33,14 @@ class InventoryManager : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        // Retrieve the MutableList from internal storage
-        Inventory.items = fileStorage.getListFromFile("inventoryFile")
+        // Retrieve any saved inventory from internal storage
+        Inventory.items = fileStorage.getInventoryFromFile("inventoryFile")
+
+        // Retrieve saved categories from internal storage
+        InventoryCategories.categories = fileStorage.getCategoriesFromFile("categoriesFile")
+        if (InventoryCategories.categories.isEmpty()) {
+            InventoryCategories.initializeWithDefaultCategories()
+        }
 
         // Set RecyclerView adapter
         itemCategoryListAdapter = ItemCategoryListAdapter()

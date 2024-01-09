@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -33,6 +32,17 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
 
+    <ImageButton
+        android:id="@+id/editImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/edit_image_button"
+        android:src="@android:drawable/ic_menu_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/itemImage"
+        app:layout_constraintEnd_toEndOf="@+id/itemImage"
+        app:layout_constraintStart_toStartOf="@+id/itemImage"
+        app:layout_constraintTop_toTopOf="@+id/itemImage" />
+
     <EditText
         android:id="@+id/editItemName"
         android:layout_width="wrap_content"
@@ -62,7 +72,17 @@
         android:id="@+id/itemCategorySpinner"
         android:layout_width="193dp"
         android:layout_height="48dp"
+
         app:layout_constraintStart_toEndOf="@+id/itemImage"
+        app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+
+    <ImageButton
+        android:id="@+id/addCategoryButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@string/add_item_category_button"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
         app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
 
     <TextView

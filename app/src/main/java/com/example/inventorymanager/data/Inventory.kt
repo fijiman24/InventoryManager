@@ -12,7 +12,7 @@ object Inventory {
      * Save current item list to internal device storage.
      */
     fun saveInventoryToFile(fileStorage: FileStorage) {
-        fileStorage.saveListToFile(items, "inventoryFile")
+        fileStorage.saveInventoryToFile(items, "inventoryFile")
     }
 
     /**
