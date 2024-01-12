@@ -12,6 +12,7 @@ import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ItemFormBinding
 import com.example.inventorymanager.utils.AddItemCategoryDialogFragment
 import com.example.inventorymanager.utils.FileStorage
+import java.util.Locale
 
 
 /**
@@ -90,6 +91,7 @@ class ItemForm : AppCompatActivity() {
     private fun returnItemData(): Triple<String, Int, String> {
         // Name
         val itemName: String = binding.editItemName.text.toString()
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
         // Stock amount
         val itemStockAmountString: String = binding.editItemStock.text.toString()

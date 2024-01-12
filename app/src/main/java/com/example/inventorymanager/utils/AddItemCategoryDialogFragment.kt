@@ -6,13 +6,14 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.databinding.DialogAddCategoryBinding
+import java.util.Locale
 
 
 class AddItemCategoryDialogFragment : DialogFragment() {
     private lateinit var binding: DialogAddCategoryBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
+        return activity?.let { it ->
             val builder = AlertDialog.Builder(it)
 
             // Inflate and set the layout for the dialog.
@@ -26,9 +27,15 @@ class AddItemCategoryDialogFragment : DialogFragment() {
                 ) { _, _ ->
                     // Extract category string
                     val newCategory = binding.category.text.toString()
-                    // Add string to categories
-                    if (newCategory.isNotEmpty()) {
-                        InventoryCategories.categories.add(newCategory)
+                    // Add string to categories IFF string is not empty and is not an existing category
+                    if (newCategory.isNotEmpty() and
+                        !InventoryCategories.categories.contains(newCategory.lowercase())
+                    ) {
+                        InventoryCategories.categories.add(newCategory.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.getDefault()
+                            ) else it.toString()
+                        })
                     }
                     // Save new category list to file storage
                     val fileStorage = FileStorage(it)
