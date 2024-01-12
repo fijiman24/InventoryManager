@@ -23,78 +23,73 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/itemImage"
-        android:layout_width="148dp"
-        android:layout_height="163dp"
-        android:contentDescription="@string/image_of_item"
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-    <ImageButton
-        android:id="@+id/editImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/edit_image_button"
-        android:src="@android:drawable/ic_menu_edit"
-        android:backgroundTint="@color/purplePrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/itemImage"
-        app:layout_constraintEnd_toEndOf="@+id/itemImage"
-        app:layout_constraintStart_toStartOf="@+id/itemImage"
-        app:layout_constraintTop_toTopOf="@+id/itemImage" />
+        <EditText
+            android:id="@+id/editItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/item_name"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textColorHint="#A1887F"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-    <EditText
-        android:id="@+id/editItemName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/item_name"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:textColorHint="#A1887F"
-        app:layout_constraintStart_toEndOf="@+id/itemImage"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+        <EditText
+            android:id="@+id/editItemStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="Stock"
+            android:ems="10"
+            android:hint="@string/stock"
+            android:inputType="number"
+            android:minHeight="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editItemName" />
 
-    <EditText
-        android:id="@+id/editItemStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/stock"
-        android:inputType="number"
-        android:minHeight="48dp"
-        app:layout_constraintStart_toEndOf="@+id/itemImage"
-        app:layout_constraintTop_toBottomOf="@+id/editItemName"
-        android:autofillHints="Stock" />
+        <TextView
+            android:id="@+id/itemCategoryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editItemStock" />
 
-    <Spinner
-        android:id="@+id/itemCategorySpinner"
-        android:layout_width="193dp"
-        android:layout_height="48dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        app:layout_constraintStart_toEndOf="@+id/itemImage"
-        app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+            <Spinner
+                android:id="@+id/itemCategorySpinner"
+                android:layout_width="193dp"
+                android:layout_height="48dp"
 
-    <ImageButton
-        android:id="@+id/addCategoryButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:contentDescription="@string/add_item_category_button"
-        android:src="@android:drawable/ic_input_add"
-        android:backgroundTint="@color/purplePrimary"
-        app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
-        app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
 
-    <TextView
-        android:id="@+id/itemCategoryLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/category"
-        app:layout_constraintStart_toEndOf="@+id/itemImage"
-        app:layout_constraintTop_toBottomOf="@+id/editItemStock" />
+            <ImageButton
+                android:id="@+id/addCategoryButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/purplePrimary"
+                android:contentDescription="@string/add_item_category_button"
+                android:src="@android:drawable/ic_input_add"
+                app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
+                app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/saveButton"
@@ -102,9 +97,9 @@
         android:layout_height="72dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="36dp"
+        android:backgroundTint="@color/purplePrimary"
         android:contentDescription="@string/save_button"
         android:src="@android:drawable/ic_menu_save"
-        android:backgroundTint="@color/purplePrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -114,9 +109,9 @@
         android:layout_height="72dp"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="36dp"
+        android:backgroundTint="@color/purplePrimary"
         android:contentDescription="@string/delete_button"
         android:src="@android:drawable/ic_menu_delete"
-        android:backgroundTint="@color/purplePrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/saveButton" />
 
