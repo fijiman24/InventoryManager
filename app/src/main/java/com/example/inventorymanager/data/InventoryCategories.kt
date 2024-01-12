@@ -9,6 +9,7 @@ object InventoryCategories {
      * Initialize categories with default values.
      */
     fun initializeWithDefaultCategories() {
+        categories.clear()
         categories.add("Storage")
         categories.add("Fridge")
         categories.add("Freezer")

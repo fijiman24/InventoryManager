@@ -10,7 +10,8 @@ import com.example.inventorymanager.data.Inventory
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ItemFormBinding
-import com.example.inventorymanager.utils.AddItemCategoryDialogFragment
+import com.example.inventorymanager.dialog.AddItemCategoryDialogFragment
+import com.example.inventorymanager.dialog.ResetItemCategoriesDialogFragment
 import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
 
@@ -34,6 +35,9 @@ class ItemForm : AppCompatActivity() {
 
         // Set on-click for add category button
         binding.addCategoryButton.setOnClickListener { openAddCategoryDialog() }
+
+        // Set on-click for reset categories button
+        binding.resetCategoryButton.setOnClickListener { openResetCategoriesDialog() }
 
         // Populate spinner with options
         val spinner: Spinner = findViewById(R.id.itemCategorySpinner)
@@ -174,5 +178,13 @@ class ItemForm : AppCompatActivity() {
     private fun openAddCategoryDialog() {
         // Show the add category dialog
         AddItemCategoryDialogFragment().show(supportFragmentManager, "ADD_CATEGORY_DIALOG")
+    }
+
+    /**
+     * Open the reset categories alert dialog.
+     */
+    private fun openResetCategoriesDialog() {
+        // Show the reset categories dialog
+        ResetItemCategoriesDialogFragment().show(supportFragmentManager, "RESET_CATEGORIES_DIALOG")
     }
 }

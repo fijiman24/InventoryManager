@@ -1,4 +1,4 @@
-package com.example.inventorymanager.utils
+package com.example.inventorymanager.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.databinding.DialogAddCategoryBinding
+import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
 
 
