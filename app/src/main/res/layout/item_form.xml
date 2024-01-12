@@ -87,6 +87,16 @@
                 android:src="@android:drawable/ic_input_add"
                 app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
                 app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+
+            <ImageButton
+                android:id="@+id/resetCategoryButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/purplePrimary"
+                android:contentDescription="@string/reset_categories_button"
+                android:src="@drawable/button_reset"
+                app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
+                app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
         </LinearLayout>
 
     </LinearLayout>

@@ -57,6 +57,14 @@
     <string name="delete_button">Delete button</string>
     <string name="edit_image_button">Edit image button</string>
     <string name="add_item_category_button">Add item category button</string>
+    <string name="reset_categories_button">Reset categories button</string>
+    <string name="increment_item_stock">Increment item stock</string>
+    <string name="decrement_item_stock">Decrement item stock</string>
+    <string name="parent_floating_action_button">Parent floating action button</string>
+    <string name="manual_entry">Manual Entry</string>
+    <string name="scan_barcode_floating_action_button">Scan barcode floating action button</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="manual_entry_floating_action_button">Manual entry floating action button</string>
     <string-array name="inventory_category_array">
         <item>Storage</item>
         <item>Fridge</item>

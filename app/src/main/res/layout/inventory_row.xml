@@ -22,6 +22,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/item_name"
+            android:paddingBottom="10dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,22 +34,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemName">
 
-            <Button
+            <ImageButton
                 android:id="@+id/itemStockDecrementButton"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:background="@color/purplePrimary"
-                android:src="@android:drawable/ic_input_add"
-                android:text="@string/minus"
+                android:contentDescription="@string/decrement_item_stock"
+                android:src="@drawable/button_minus"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/itemStockValue"
                 android:layout_width="100dp"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:autofillHints=""
-                android:ems="10"
                 android:gravity="center"
                 android:hint="@string/stock"
                 android:inputType="number"
@@ -57,12 +58,13 @@
                 app:layout_constraintStart_toEndOf="@+id/itemStockDecrementButton"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/itemStockIncrementButton"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:background="@color/purplePrimary"
-                android:text="@string/plus"
+                android:contentDescription="@string/increment_item_stock"
+                android:src="@drawable/button_add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
         </LinearLayout>
