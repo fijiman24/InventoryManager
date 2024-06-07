@@ -76,8 +76,12 @@ class InventoryManager : AppCompatActivity() {
             binding.inventoryEmptyMessage.text = ""
         }
 
-        // START OF FAB LOGIC
         // Source: https://www.geeksforgeeks.org/floating-action-button-fab-in-android-with-example/
+        // Register all FABs and action text
+        setupFAB()
+    }
+
+    private fun setupFAB() {
         // Register all FABs and action text
         parentFab = findViewById(R.id.fab)
         manualEntryFab = findViewById(R.id.fab_manual_entry)
@@ -123,6 +127,5 @@ class InventoryManager : AppCompatActivity() {
         scanBarcodeFab.setOnClickListener {
             Toast.makeText(this, "Scan Barcode", Toast.LENGTH_SHORT).show()
         }
-        // END OF FAB LOGIC
     }
 }
