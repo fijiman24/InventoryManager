@@ -65,6 +65,8 @@
     <string name="scan_barcode_floating_action_button">Scan barcode floating action button</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="manual_entry_floating_action_button">Manual entry floating action button</string>
+    <string name="download_manifest">Download Manifest</string>
+    <string name="download_manifest_floating_action_button">Download manifest floating action button</string>
     <string-array name="inventory_category_array">
         <item>Storage</item>
         <item>Fridge</item>

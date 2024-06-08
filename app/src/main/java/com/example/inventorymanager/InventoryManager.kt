@@ -1,10 +1,11 @@
 package com.example.inventorymanager
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,9 @@ import com.example.inventorymanager.data.Inventory
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ActivityMainBinding
+import com.example.inventorymanager.utils.FabButton
 import com.example.inventorymanager.utils.FileStorage
+import com.example.inventorymanager.utils.PdfGenerator
 import com.example.inventorymanager.utils.StickyHeaderDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -30,12 +33,9 @@ class InventoryManager : AppCompatActivity() {
 
     // FABs
     private lateinit var parentFab: FloatingActionButton
-    private lateinit var manualEntryFab: FloatingActionButton
-    private lateinit var scanBarcodeFab: FloatingActionButton
-    private lateinit var manualEntryActionText: TextView
-    private lateinit var scanBarcodeActionText: TextView
     private var isAllFabsVisible: Boolean? = null
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         // Inflate initial layout
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -67,8 +67,7 @@ class InventoryManager : AppCompatActivity() {
     }
 
     /**
-     * Sets up the RecyclerView adapter, including creating the adapter, setting the layout manager,
-     * and adding the sticky header decoration.
+     * Sets up the RecyclerView adapter for showing the inventory items.
      */
     private fun setupAdapter() {
         itemCategoryListAdapter = ItemCategoryListAdapter()
@@ -92,23 +91,27 @@ class InventoryManager : AppCompatActivity() {
     /**
      * Sets up the Floating Action Button (FAB) logic.
      *
-     * This includes registering all FABs and action text, hiding FAB elements, setting up the
-     * parent FAB on-click listener, and setting up the on-click listeners for the manual entry and
-     * scan barcode buttons.
+     * Includes buttons for creating an item entry, generating a PDF inventory manifest, and
+     * scanning items using a barcode.
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun setupFAB() {
-        // Register all FABs and action text
         parentFab = findViewById(R.id.fab)
-        manualEntryFab = findViewById(R.id.fab_manual_entry)
-        scanBarcodeFab = findViewById(R.id.fab_scan_barcode)
-        manualEntryActionText = findViewById(R.id.manual_entry_action_text)
-        scanBarcodeActionText = findViewById(R.id.scan_barcode_action_text)
+
+        // Register all child FABs
+        val childFabs = mutableListOf<FabButton>()
+        val manualEntryFab = FabButton(findViewById(R.id.fab_manual_entry), findViewById(R.id.manual_entry_action_text))
+        val scanBarcodeFab = FabButton(findViewById(R.id.fab_scan_barcode), findViewById(R.id.scan_barcode_action_text))
+        val downloadManifestFab = FabButton(findViewById(R.id.fab_download_manifest), findViewById(R.id.download_manifest_action_text))
+
+        childFabs.add(manualEntryFab)
+        childFabs.add(scanBarcodeFab)
+        childFabs.add(downloadManifestFab)
 
         // Hide FAB action text
-        manualEntryFab.visibility = View.GONE
-        scanBarcodeFab.visibility = View.GONE
-        manualEntryActionText.visibility = View.GONE
-        scanBarcodeActionText.visibility = View.GONE
+        childFabs.forEach { fab ->
+            fab.hide()
+        }
 
         // Set boolean
         isAllFabsVisible = false
@@ -117,17 +120,15 @@ class InventoryManager : AppCompatActivity() {
         parentFab.setOnClickListener {
             (if (!isAllFabsVisible!!) {
                 // Show FABs
-                manualEntryFab.show()
-                scanBarcodeFab.show()
-                manualEntryActionText.visibility = View.VISIBLE
-                scanBarcodeActionText.visibility = View.VISIBLE
+                childFabs.forEach { fab ->
+                    fab.show()
+                }
                 true
             } else {
                 // Hide FABs
-                manualEntryFab.hide()
-                scanBarcodeFab.hide()
-                manualEntryActionText.visibility = View.GONE
-                scanBarcodeActionText.visibility = View.GONE
+                childFabs.forEach { fab ->
+                    fab.hide()
+                }
                 false
             }).also { isAllFabsVisible = it }
         }
@@ -141,6 +142,11 @@ class InventoryManager : AppCompatActivity() {
         // Set on-click for scan barcode button
         scanBarcodeFab.setOnClickListener {
             Toast.makeText(this, "Scan Barcode", Toast.LENGTH_SHORT).show()
+        }
+
+        downloadManifestFab.setOnClickListener {
+            val pdfGenerator = PdfGenerator(this)
+            pdfGenerator.generatePdf(itemCategoryListAdapter.itemData)
         }
     }
 }

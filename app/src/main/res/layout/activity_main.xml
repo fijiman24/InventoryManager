@@ -96,9 +96,6 @@
         app:srcCompat="@drawable/fab_scan_barcode"
         android:contentDescription="@string/scan_barcode_floating_action_button" />
 
-    <!-- Action name text for the add person button -->
-    <!-- Make sure that you are constraining this Text
-         to the add Person FAB button -->
     <TextView
         android:id="@+id/scan_barcode_action_text"
         android:layout_width="wrap_content"
@@ -108,5 +105,28 @@
         app:layout_constraintBottom_toBottomOf="@+id/fab_scan_barcode"
         app:layout_constraintEnd_toStartOf="@+id/fab_scan_barcode"
         app:layout_constraintTop_toTopOf="@+id/fab_scan_barcode" />
+
+    <!-- Floating action button for downloading PDF manifest -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_download_manifest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/fab_scan_barcode"
+        app:layout_constraintEnd_toEndOf="@+id/fab_scan_barcode"
+        app:layout_constraintStart_toStartOf="@+id/fab_scan_barcode"
+        app:srcCompat="@drawable/fab_download_manifest"
+        android:contentDescription="@string/download_manifest_floating_action_button" />
+
+    <TextView
+        android:id="@+id/download_manifest_action_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/download_manifest"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_download_manifest"
+        app:layout_constraintEnd_toStartOf="@+id/fab_download_manifest"
+        app:layout_constraintTop_toTopOf="@+id/fab_download_manifest"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
