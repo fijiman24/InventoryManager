@@ -98,15 +98,40 @@ class InventoryManager : AppCompatActivity() {
     private fun setupFAB() {
         parentFab = findViewById(R.id.fab)
 
-        // Register all child FABs
+        // Register all child FABs and set their on-click effects
         val childFabs = mutableListOf<FabButton>()
-        val manualEntryFab = FabButton(findViewById(R.id.fab_manual_entry), findViewById(R.id.manual_entry_action_text))
-        val scanBarcodeFab = FabButton(findViewById(R.id.fab_scan_barcode), findViewById(R.id.scan_barcode_action_text))
-        val downloadManifestFab = FabButton(findViewById(R.id.fab_download_manifest), findViewById(R.id.download_manifest_action_text))
 
+        // Manual entry fab
+        val manualEntryFab = FabButton(
+            findViewById(R.id.fab_manual_entry),
+            findViewById(R.id.manual_entry_action_text)
+        )
         childFabs.add(manualEntryFab)
+        manualEntryFab.setOnClickListener {
+            val intent = Intent(this, ItemForm::class.java)
+            startActivity(intent)
+        }
+
+        // Scan barcode fab
+        val scanBarcodeFab = FabButton(
+            findViewById(R.id.fab_scan_barcode),
+            findViewById(R.id.scan_barcode_action_text)
+        )
         childFabs.add(scanBarcodeFab)
+        scanBarcodeFab.setOnClickListener {
+            Toast.makeText(this, "Scan Barcode", Toast.LENGTH_SHORT).show()
+        }
+
+        // Download manifest fab
+        val downloadManifestFab = FabButton(
+            findViewById(R.id.fab_download_manifest),
+            findViewById(R.id.download_manifest_action_text)
+        )
         childFabs.add(downloadManifestFab)
+        downloadManifestFab.setOnClickListener {
+            val pdfGenerator = PdfGenerator(this)
+            pdfGenerator.generatePdf(itemCategoryListAdapter.itemData)
+        }
 
         // Hide FAB action text
         childFabs.forEach { fab ->
@@ -131,22 +156,6 @@ class InventoryManager : AppCompatActivity() {
                 }
                 false
             }).also { isAllFabsVisible = it }
-        }
-
-        // Set on-click for manual entry button
-        manualEntryFab.setOnClickListener {
-            val intent = Intent(this, ItemForm::class.java)
-            startActivity(intent)
-        }
-
-        // Set on-click for scan barcode button
-        scanBarcodeFab.setOnClickListener {
-            Toast.makeText(this, "Scan Barcode", Toast.LENGTH_SHORT).show()
-        }
-
-        downloadManifestFab.setOnClickListener {
-            val pdfGenerator = PdfGenerator(this)
-            pdfGenerator.generatePdf(itemCategoryListAdapter.itemData)
         }
     }
 }
