@@ -53,7 +53,24 @@ class InventoryManager : AppCompatActivity() {
             InventoryCategories.initializeWithDefaultCategories()
         }
 
+        // Remove empty message if there are items
+        if (inventory.items.isNotEmpty()) {
+            binding.inventoryEmptyMessage.text = ""
+        }
+
         // Set RecyclerView adapter
+        setupAdapter()
+
+        // Register all FABs and action text
+        // Source: https://www.geeksforgeeks.org/floating-action-button-fab-in-android-with-example/
+        setupFAB()
+    }
+
+    /**
+     * Sets up the RecyclerView adapter, including creating the adapter, setting the layout manager,
+     * and adding the sticky header decoration.
+     */
+    private fun setupAdapter() {
         itemCategoryListAdapter = ItemCategoryListAdapter()
         val recyclerView: RecyclerView = binding.rvInventoryItems
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -70,17 +87,15 @@ class InventoryManager : AppCompatActivity() {
                 itemCategoryListAdapter, binding.root
             )
         )
-
-        // Remove empty message if there are items
-        if (inventory.items.isNotEmpty()) {
-            binding.inventoryEmptyMessage.text = ""
-        }
-
-        // Source: https://www.geeksforgeeks.org/floating-action-button-fab-in-android-with-example/
-        // Register all FABs and action text
-        setupFAB()
     }
 
+    /**
+     * Sets up the Floating Action Button (FAB) logic.
+     *
+     * This includes registering all FABs and action text, hiding FAB elements, setting up the
+     * parent FAB on-click listener, and setting up the on-click listeners for the manual entry and
+     * scan barcode buttons.
+     */
     private fun setupFAB() {
         // Register all FABs and action text
         parentFab = findViewById(R.id.fab)
