@@ -1,17 +1,18 @@
 package com.example.inventorymanager
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import com.example.inventorymanager.data.Inventory
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ItemFormBinding
 import com.example.inventorymanager.dialog.AddItemCategoryDialogFragment
+import com.example.inventorymanager.dialog.DeleteItemDialogFragment
 import com.example.inventorymanager.dialog.ResetItemCategoriesDialogFragment
+import com.example.inventorymanager.dialog.SaveEditDialogFragment
+import com.example.inventorymanager.dialog.SaveNewItemDialogFragment
 import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
 
@@ -21,7 +22,7 @@ import java.util.Locale
  */
 class ItemForm : AppCompatActivity() {
     private lateinit var binding: ItemFormBinding
-    private val fileStorage = FileStorage(this)
+    internal val fileStorage = FileStorage(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set view
@@ -92,7 +93,7 @@ class ItemForm : AppCompatActivity() {
     /**
      * Return item data from filled form.
      */
-    private fun returnItemData(): Triple<String, Int, String> {
+    internal fun returnItemData(): Triple<String, Int, String> {
         // Name
         val itemName: String = binding.editItemName.text.toString()
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -118,17 +119,7 @@ class ItemForm : AppCompatActivity() {
         val isAllFieldsChecked = checkAllFields()
 
         if (isAllFieldsChecked) {
-            val (itemName, itemStockAmount, itemCategory) = returnItemData()
-
-            // Add item to inventory list
-            Inventory.items.add(InventoryItem(itemName, itemStockAmount, itemCategory))
-
-            // Save inventory data
-            Inventory.saveInventoryToFile(fileStorage)
-
-            // Return to MainActivity
-            val intent = Intent(this, InventoryManager::class.java)
-            startActivity(intent)
+            SaveNewItemDialogFragment().show(supportFragmentManager, "SAVE_NEW_ITEM_DIALOG")
         }
     }
 
@@ -142,17 +133,8 @@ class ItemForm : AppCompatActivity() {
         val isAllFieldsChecked = checkAllFields()
 
         if (isAllFieldsChecked) {
-            val (itemName, itemStockAmount, itemCategory) = returnItemData()
-
-            // Replace item
-            Inventory.replaceItemById(item.id, itemName, itemStockAmount, itemCategory)
-
-            // Save inventory data
-            Inventory.saveInventoryToFile(fileStorage)
-
-            // Return to MainActivity
-            val intent = Intent(this, InventoryManager::class.java)
-            startActivity(intent)
+            SaveEditDialogFragment.newInstance(item)
+                .show(supportFragmentManager, "SAVE_EDIT_DIALOG")
         }
     }
 
@@ -162,14 +144,7 @@ class ItemForm : AppCompatActivity() {
      * @param item copy of item to delete from inventory
      */
     private fun deleteItem(item: InventoryItem) {
-        Inventory.removeItemById(item.id)
-
-        // Save inventory data
-        Inventory.saveInventoryToFile(fileStorage)
-
-        // Return to MainActivity
-        val intent = Intent(this, InventoryManager::class.java)
-        startActivity(intent)
+        DeleteItemDialogFragment.newInstance(item).show(supportFragmentManager, "DELETE_ITEM_DIALOG")
     }
 
     /**
