@@ -26,10 +26,12 @@ class SaveEditDialogFragment : BaseDialogFragment() {
     override fun onPositiveButtonClick() {
         val activity = activity as? ItemForm
         if (activity != null) {
-            val (itemName, itemStockAmount, itemCategory) = activity.returnItemData()
+            val data = activity.returnItemData()
 
-            // Replace item
-            Inventory.replaceItemById(item.id, itemName, itemStockAmount, itemCategory)
+            // Replace item passing all new fields
+            Inventory.replaceItemById(
+                item.id, data.name, data.stock, data.category, data.description, data.expirationDate
+            )
 
             // Save inventory data
             Inventory.saveInventoryToFile(activity.fileStorage)

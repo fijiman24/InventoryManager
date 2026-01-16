@@ -1,8 +1,10 @@
 package com.example.inventorymanager
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.example.inventorymanager.data.InventoryCategories
@@ -15,7 +17,6 @@ import com.example.inventorymanager.dialog.SaveEditDialogFragment
 import com.example.inventorymanager.dialog.SaveNewItemDialogFragment
 import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
-
 
 /**
  * Form for adding a new inventory item.
@@ -40,6 +41,10 @@ class ItemForm : AppCompatActivity() {
         // Set on-click for reset categories button
         binding.resetCategoryButton.setOnClickListener { openResetCategoriesDialog() }
 
+        // Set expiration date field to show date picker spinner
+        binding.editItemExpirationDate.isFocusable = false  // Ensures keyboard doesn't appear
+        binding.editItemExpirationDate.setOnClickListener { showDatePicker() }
+
         // Populate spinner with options
         val spinner: Spinner = findViewById(R.id.itemCategorySpinner)
         val adapter =
@@ -52,6 +57,8 @@ class ItemForm : AppCompatActivity() {
             // Change form field text
             binding.editItemName.setText(itemToEdit.name)
             binding.editItemStock.setText(itemToEdit.stock.toString())
+            binding.editItemDescription.setText(itemToEdit.description)
+            binding.editItemExpirationDate.setText(itemToEdit.expirationDate)
 
             // Set category spinner
             val categories = resources.getStringArray(R.array.inventory_category_array)
@@ -62,13 +69,32 @@ class ItemForm : AppCompatActivity() {
             binding.deleteButton.setOnClickListener { deleteItem(itemToEdit) }
 
             // Replace on-click for save button
-            binding.saveButton.setOnClickListener {
-                saveEdit(itemToEdit)
-            }
+            binding.saveButton.setOnClickListener { saveEdit(itemToEdit) }
         } else {
             // Remove delete item button
             binding.deleteButton.visibility = View.GONE
         }
+    }
+
+    /**
+     * Show the date picker spinner.
+     */
+    private fun showDatePicker() {
+        // Inflate the custom layout
+        val dialogView = layoutInflater.inflate(R.layout.date_picker_spinner, null)
+        val datePicker = dialogView.findViewById<DatePicker>(R.id.datePicker)
+
+        // Create and show the dialog
+        AlertDialog.Builder(this).setView(dialogView).setPositiveButton("OK") { _, _ ->
+            val year = datePicker.year
+            val month = datePicker.month
+            val day = datePicker.dayOfMonth
+
+            // Format date as yyyy-mm-dd
+            val formattedDate =
+                String.format(Locale.getDefault(), format="%d-%02d-%02d", year, month + 1, day) // Month is 0-indexed, so we add 1
+            binding.editItemExpirationDate.setText(formattedDate)
+        }.setNegativeButton("Cancel", null).show()
     }
 
     /**
@@ -87,38 +113,59 @@ class ItemForm : AppCompatActivity() {
             return false
         }
 
+        // Expiration date
+        if (binding.editItemExpirationDate.length() == 0) {
+            binding.editItemExpirationDate.error = "This field is required"
+            return false
+        }
+
         return true
     }
 
     /**
      * Return item data from filled form.
      */
-    internal fun returnItemData(): Triple<String, Int, String> {
+    internal fun returnItemData(): InventoryItemData {
         // Name
-        val itemName: String = binding.editItemName.text.toString()
+        val itemName = binding.editItemName.text.toString()
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
         // Stock amount
-        val itemStockAmountString: String = binding.editItemStock.text.toString()
-        var itemStockAmount = 0
-        if (itemStockAmountString.isNotEmpty()) {
-            itemStockAmount = itemStockAmountString.toInt()
-        }
+        val itemStockAmountString = binding.editItemStock.text.toString()
+        val itemStockAmount =
+            if (itemStockAmountString.isNotEmpty()) itemStockAmountString.toInt() else 0
 
         // Category
-        val itemCategory: String = binding.itemCategorySpinner.selectedItem.toString()
+        val itemCategory = binding.itemCategorySpinner.selectedItem.toString()
 
-        return Triple(itemName, itemStockAmount, itemCategory)
+        // Description
+        val itemDescription = binding.editItemDescription.text.toString()
+
+        // Expiration date
+        val itemExpiration = binding.editItemExpirationDate.text.toString()
+
+        return InventoryItemData(
+            itemName, itemStockAmount, itemCategory, itemDescription, itemExpiration
+        )
     }
+
+    /**
+     * Helper data class to pass data cleanly
+     */
+    data class InventoryItemData(
+        val name: String,
+        val stock: Int,
+        val category: String,
+        val description: String,
+        val expirationDate: String
+    )
 
     /**
      * Save new inventory item entry.
      */
     private fun saveNewItem() {
         // Make sure required fields are filled
-        val isAllFieldsChecked = checkAllFields()
-
-        if (isAllFieldsChecked) {
+        if (checkAllFields()) {
             SaveNewItemDialogFragment().show(supportFragmentManager, "SAVE_NEW_ITEM_DIALOG")
         }
     }
@@ -129,10 +176,7 @@ class ItemForm : AppCompatActivity() {
      * @param item item entry to edit
      */
     private fun saveEdit(item: InventoryItem) {
-        // Make sure required fields are filled
-        val isAllFieldsChecked = checkAllFields()
-
-        if (isAllFieldsChecked) {
+        if (checkAllFields()) {
             SaveEditDialogFragment.newInstance(item)
                 .show(supportFragmentManager, "SAVE_EDIT_DIALOG")
         }
@@ -144,14 +188,14 @@ class ItemForm : AppCompatActivity() {
      * @param item copy of item to delete from inventory
      */
     private fun deleteItem(item: InventoryItem) {
-        DeleteItemDialogFragment.newInstance(item).show(supportFragmentManager, "DELETE_ITEM_DIALOG")
+        DeleteItemDialogFragment.newInstance(item)
+            .show(supportFragmentManager, "DELETE_ITEM_DIALOG")
     }
 
     /**
      * Open the add category alert dialog.
      */
     private fun openAddCategoryDialog() {
-        // Show the add category dialog
         AddItemCategoryDialogFragment().show(supportFragmentManager, "ADD_CATEGORY_DIALOG")
     }
 
@@ -159,7 +203,6 @@ class ItemForm : AppCompatActivity() {
      * Open the reset categories alert dialog.
      */
     private fun openResetCategoriesDialog() {
-        // Show the reset categories dialog
         ResetItemCategoriesDialogFragment().show(supportFragmentManager, "RESET_CATEGORIES_DIALOG")
     }
 }

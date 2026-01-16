@@ -47,7 +47,6 @@
     <string name="hello_first_fragment">Hello world!</string>
     <string name="add_item">Add item</string>
     <string name="inventory_empty">Inventory Empty</string>
-    <string name="item_name">Item name</string>
     <string name="minus">-</string>
     <string name="stock">Stock</string>
     <string name="plus">+</string>
@@ -74,4 +73,8 @@
         <item>Spices</item>
         <item>Snacks</item>
     </string-array>
+    <string name="expiration_date_with_countdown">Exp. %1$s (%2$s)</string>
+    <string name="item_name_input_hint">Item Name</string>
+    <string name="description_input_hint">Description (optional)</string>
+    <string name="expiration_date_input_hint">Expiration Date (yyyy-mm-dd)</string>
 </resources>

@@ -1,72 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="25dp"
-    android:layout_marginBottom="25dp"
-    android:id="@+id/itemView">
+    android:padding="10dp">
 
     <LinearLayout
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/controlsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="10dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/itemName"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/item_name"
-            android:paddingBottom="10dp"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/itemStockDecrementButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/purplePrimary"
+            android:contentDescription="@string/decrement_item_stock"
+            android:src="@drawable/button_minus" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemName">
+        <EditText
+            android:id="@+id/itemStockValue"
+            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:autofillHints=""
+            android:gravity="center"
+            android:hint="@string/stock"
+            android:inputType="number"
+            android:textColorHint="#DD2C00" />
 
-            <ImageButton
-                android:id="@+id/itemStockDecrementButton"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/purplePrimary"
-                android:contentDescription="@string/decrement_item_stock"
-                android:src="@drawable/button_minus"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <EditText
-                android:id="@+id/itemStockValue"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:autofillHints=""
-                android:gravity="center"
-                android:hint="@string/stock"
-                android:inputType="number"
-                android:textColorHint="#A1887F"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/itemStockIncrementButton"
-                app:layout_constraintStart_toEndOf="@+id/itemStockDecrementButton"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/itemStockIncrementButton"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/purplePrimary"
-                android:contentDescription="@string/increment_item_stock"
-                android:src="@drawable/button_add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/itemStockIncrementButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/purplePrimary"
+            android:contentDescription="@string/increment_item_stock"
+            android:src="@drawable/button_add" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/itemName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:text="@string/item_name_input_hint"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/controlsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/itemDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="4dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/controlsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemName"
+        tools:text="Description goes here..." />
+
+    <TextView
+        android:id="@+id/itemExpiration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemDescription"
+        tools:text="2025-12-15 (2yr)" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

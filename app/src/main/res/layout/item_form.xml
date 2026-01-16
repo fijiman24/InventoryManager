@@ -23,9 +23,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="vertical"
@@ -34,49 +33,61 @@
 
         <EditText
             android:id="@+id/editItemName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/item_name"
+            android:hint="@string/item_name_input_hint"
             android:inputType="text"
             android:minHeight="48dp"
-            android:textColorHint="#A1887F"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+            android:textColorHint="#546E7A" />
+
+        <EditText
+            android:id="@+id/editItemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/description_input_hint"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A" />
+
+        <EditText
+            android:id="@+id/editItemExpirationDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/expiration_date_input_hint"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A" />
 
         <EditText
             android:id="@+id/editItemStock"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints="Stock"
-            android:ems="10"
             android:hint="@string/stock"
             android:inputType="number"
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editItemName" />
+            android:textColorHint="#546E7A" />
 
         <TextView
             android:id="@+id/itemCategoryLabel"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/category"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editItemStock" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/category" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Spinner
                 android:id="@+id/itemCategorySpinner"
-                android:layout_width="193dp"
+                android:layout_width="0dp"
                 android:layout_height="48dp"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+                android:layout_weight="1" />
 
             <ImageButton
                 android:id="@+id/addCategoryButton"
@@ -84,9 +95,7 @@
                 android:layout_height="48dp"
                 android:backgroundTint="@color/purplePrimary"
                 android:contentDescription="@string/add_item_category_button"
-                android:src="@android:drawable/ic_input_add"
-                app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
-                app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+                android:src="@android:drawable/ic_input_add" />
 
             <ImageButton
                 android:id="@+id/resetCategoryButton"
@@ -94,9 +103,7 @@
                 android:layout_height="48dp"
                 android:backgroundTint="@color/purplePrimary"
                 android:contentDescription="@string/reset_categories_button"
-                android:src="@drawable/button_reset"
-                app:layout_constraintStart_toEndOf="@+id/itemCategorySpinner"
-                app:layout_constraintTop_toBottomOf="@+id/itemCategoryLabel" />
+                android:src="@drawable/button_reset" />
         </LinearLayout>
 
     </LinearLayout>
@@ -105,8 +112,7 @@
         android:id="@+id/saveButton"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="36dp"
+        android:layout_margin="32dp"
         android:backgroundTint="@color/purplePrimary"
         android:contentDescription="@string/save_button"
         android:src="@android:drawable/ic_menu_save"
@@ -117,8 +123,7 @@
         android:id="@+id/deleteButton"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="36dp"
+        android:layout_margin="32dp"
         android:backgroundTint="@color/purplePrimary"
         android:contentDescription="@string/delete_button"
         android:src="@android:drawable/ic_menu_delete"

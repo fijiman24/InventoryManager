@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="cadmiumRed">#D22B2B</color>
     <color name="purplePrimary">#6750A4</color>
+    <color name="warningYellow">#FFEB3B</color>
 </resources>

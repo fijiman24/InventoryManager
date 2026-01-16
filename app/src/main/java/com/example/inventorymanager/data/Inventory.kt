@@ -30,10 +30,22 @@ object Inventory {
         itemId: String,
         newItemName: String,
         newItemStock: Int,
-        newItemCategory: String
+        newItemCategory: String,
+        newItemDescription: String,
+        newItemExpiration: String
     ) {
         val existingItemIndex = items.indexOfFirst { it.id == itemId }
-        val editedItem = InventoryItem(newItemName, newItemStock, newItemCategory)
-        items[existingItemIndex] = editedItem
+        if (existingItemIndex != -1) {
+            // Re-use ID but update fields
+            val editedItem = InventoryItem(
+                name = newItemName,
+                stock = newItemStock,
+                category = newItemCategory,
+                description = newItemDescription,
+                expirationDate = newItemExpiration,
+                id = itemId
+            )
+            items[existingItemIndex] = editedItem
+        }
     }
 }

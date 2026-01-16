@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.example.inventorymanager.ItemForm
 import com.example.inventorymanager.R
 import com.example.inventorymanager.data.Inventory
@@ -17,6 +18,10 @@ import com.example.inventorymanager.databinding.InventoryRowBinding
 import com.example.inventorymanager.databinding.InventoryRowComponentBinding
 import com.example.inventorymanager.utils.FileStorage
 import com.example.inventorymanager.utils.InventoryItemRowInterface
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.time.temporal.ChronoUnit
 
 /**
  * View for list of items grouped by their category.
@@ -68,10 +73,12 @@ class ItemsByCategoryView : ConstraintLayout {
                 val item = adapter.getView(position, null, this)
                 item.measure(0, 0)
                 totalHeight += item.measuredHeight
-                val layoutParams = this.layoutParams
-                layoutParams.height = totalHeight
-                this.requestLayout()
             }
+
+            // Add a small buffer or handle empty states if needed
+            val layoutParams = this.layoutParams
+            layoutParams.height = totalHeight
+            this.requestLayout()
         }
     }
 
@@ -108,6 +115,79 @@ class ItemsByCategoryView : ConstraintLayout {
             inventoryRowBinding.apply {
                 itemName.text = inventoryItem.name
                 itemStockValue.setText(inventoryItem.stock.toString())
+
+                // Handle description truncation
+                val desc = inventoryItem.description
+                itemDescription.text = if (desc.length > 25) "${desc.take(25)}..." else desc
+                itemDescription.visibility = if (desc.isNotEmpty()) VISIBLE else GONE
+
+                // Handle expiration date logic
+                itemExpiration.visibility = VISIBLE
+                try {
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val expiryDate = LocalDate.parse(inventoryItem.expirationDate, formatter)
+                    val today = LocalDate.now()
+                    val daysUntil = ChronoUnit.DAYS.between(today, expiryDate)
+                    val monthsUntil = ChronoUnit.MONTHS.between(today, expiryDate)
+                    val yearsUntil = ChronoUnit.YEARS.between(today, expiryDate)
+
+                    val timeString = when {
+                        kotlin.math.abs(yearsUntil) >= 1 -> "${yearsUntil}yr"
+                        kotlin.math.abs(monthsUntil) >= 1 -> "${monthsUntil}mo"
+                        else -> "${daysUntil}d"
+                    }
+
+                    itemExpiration.text = context.getString(
+                        R.string.expiration_date_with_countdown,
+                        inventoryItem.expirationDate,
+                        timeString
+                    )
+
+                    // Highlight logic
+                    when {
+                        daysUntil < 0 -> {
+                            // Expired: red background
+                            itemExpiration.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    context, R.color.cadmiumRed
+                                )
+                            )
+                            itemExpiration.setTextColor(
+                                ContextCompat.getColor(
+                                    context, R.color.white
+                                )
+                            )
+                        }
+
+                        daysUntil < 7 -> {
+                            // Expiring in < 1 week: yellow background
+                            itemExpiration.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    context, R.color.warningYellow
+                                )
+                            )
+                            itemExpiration.setTextColor(
+                                ContextCompat.getColor(
+                                    context, R.color.black
+                                )
+                            )
+                        }
+
+                        else -> {
+                            itemExpiration.background = null
+                            itemExpiration.setTextColor(
+                                ContextCompat.getColor(
+                                    context, R.color.black
+                                )
+                            )
+                        }
+                    }
+                } catch (_: DateTimeParseException) {
+                    itemExpiration.text = inventoryItem.expirationDate
+                    itemExpiration.background = null
+                }
+
+                // Click Listeners
                 itemStockIncrementButton.setOnClickListener { onIncrementClick(inventoryItem) }
                 itemStockDecrementButton.setOnClickListener { onDecrementClick(inventoryItem) }
                 itemView.setOnClickListener { onItemClick(inventoryItem) }
@@ -119,27 +199,19 @@ class ItemsByCategoryView : ConstraintLayout {
         /**
          * Get item from inventory at given position.
          */
-        override fun getItem(position: Int): Any {
-            return items[position]
-        }
+        override fun getItem(position: Int) = items[position]
 
         /**
          * Get item ID.
          */
-        override fun getItemId(position: Int): Long {
-            return 0
-        }
+        override fun getItemId(position: Int) = 0L
 
         /**
          * Get count of items in inventory.
          */
-        override fun getCount(): Int {
-            return items.size
-        }
+        override fun getCount() = items.size
 
-        override fun isEnabled(position: Int): Boolean {
-            return false
-        }
+        override fun isEnabled(position: Int) = false
 
         /**
          * Open edit item form for clicked-on item.

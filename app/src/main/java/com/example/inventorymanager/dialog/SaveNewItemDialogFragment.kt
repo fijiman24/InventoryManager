@@ -18,10 +18,14 @@ class SaveNewItemDialogFragment : BaseDialogFragment() {
     override fun onPositiveButtonClick() {
         val activity = activity as? ItemForm
         if (activity != null) {
-            val (itemName, itemStockAmount, itemCategory) = activity.returnItemData()
+            val data = activity.returnItemData()
 
             // Add item to inventory list
-            Inventory.items.add(InventoryItem(itemName, itemStockAmount, itemCategory))
+            Inventory.items.add(
+                InventoryItem(
+                    data.name, data.stock, data.category, data.description, data.expirationDate
+                )
+            )
 
             // Save inventory data
             Inventory.saveInventoryToFile(activity.fileStorage)
