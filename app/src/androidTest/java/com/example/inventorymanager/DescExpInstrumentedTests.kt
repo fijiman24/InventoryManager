@@ -1,6 +1,7 @@
 package com.example.inventorymanager
 
 import android.view.View
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -8,6 +9,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.PositionAssertions.isCompletelyRightOf
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
@@ -21,10 +23,13 @@ import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.utils.FileStorage
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.containsString
+import org.hamcrest.TypeSafeMatcher
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RunWith(AndroidJUnit4::class)
 class DescExpInstrumentedTests {
@@ -89,7 +94,7 @@ class DescExpInstrumentedTests {
             // Check if Description and Date are displayed on the main list
             onView(withText("Test Desc")).check(matches(isDisplayed()))
             // We check for part of the date string
-            onView(withText(org.hamcrest.Matchers.containsString("2030-01-01"))).check(
+            onView(withText(containsString("2030-01-01"))).check(
                 matches(
                     isDisplayed()
                 )
@@ -100,13 +105,22 @@ class DescExpInstrumentedTests {
     @Test
     fun savingItem_allowsEmptyDescription() {
         ActivityScenario.launch(InventoryManager::class.java).use {
-            // Click FAB to Add
+            // Navigate to Manual Entry Form
             onView(withId(R.id.fab)).perform(click())
             onView(withId(R.id.fab_manual_entry)).perform(click())
 
-            // Fill required fields only
+            // Fill required fields (Name & Stock) but leave Description and Expiration Date empty
             onView(withId(R.id.editItemName)).perform(typeText("Milk"), closeSoftKeyboard())
             onView(withId(R.id.editItemStock)).perform(typeText("1"), closeSoftKeyboard())
+
+            // Click Save
+            onView(withId(R.id.saveButton)).perform(click())
+
+            // Assert that Description field has NO error (even though the form failed to save due to missing Date)
+            onView(withId(R.id.editItemDescription)).check(matches(hasNoErrorText()))
+
+            // Confirm that the Expiration Date DID get an error
+            onView(withId(R.id.editItemExpirationDate)).check(matches(hasErrorText("This field is required")))
         }
     }
 
@@ -125,6 +139,67 @@ class DescExpInstrumentedTests {
             // Verify we are still on the form (Save button still visible) or Error is shown
             onView(withId(R.id.saveButton)).check(matches(isDisplayed()))
             onView(withId(R.id.editItemExpirationDate)).check(matches(hasErrorText("This field is required")))
+        }
+    }
+
+    @Test
+    fun longDescription_isTruncatedWithEllipsis() {
+        val longDesc = "This description is exactly thirty chars.." // 40 chars
+        val expected = "This description is exact..." // 25 chars + ...
+
+        val item = InventoryItem("TruncatedItem", 1, "Fridge", longDesc, "2025-01-01")
+        Inventory.items.add(item)
+        saveInventory()
+
+        ActivityScenario.launch(InventoryManager::class.java).use {
+            // Verify truncated text is displayed
+            onView(withText(expected)).check(matches(isDisplayed()))
+            // Verify full text is NOT displayed
+            onView(withText(longDesc)).check(doesNotExist())
+        }
+    }
+
+    @Test
+    fun expirationDifference_isCalculatedAndRoundedCorrectly() {
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // ~2.5 years (30 months) -> "2yr"
+        val date2yr = today.plusMonths(30)
+        // ~1.5 years (18 months) -> "1yr"
+        val date1yr = today.plusMonths(18)
+        // ~6 months -> "6mo"
+        val date6mo = today.plusMonths(6)
+        // ~45 days -> "1mo"
+        val date1mo = today.plusDays(45)
+        // 20 days -> "20d"
+        val date20d = today.plusDays(20)
+        // -20 days -> "-20d" (Expired)
+        val dateMinus20d = today.minusDays(20)
+
+        Inventory.items.addAll(
+            listOf(
+                InventoryItem("Item2yr", 1, "Fridge", "", date2yr.format(formatter)),
+                InventoryItem("Item1yr", 1, "Fridge", "", date1yr.format(formatter)),
+                InventoryItem("Item6mo", 1, "Fridge", "", date6mo.format(formatter)),
+                InventoryItem("Item1mo", 1, "Fridge", "", date1mo.format(formatter)),
+                InventoryItem("Item20d", 1, "Fridge", "", date20d.format(formatter)),
+                InventoryItem("ItemExpired", 1, "Fridge", "", dateMinus20d.format(formatter))
+            )
+        )
+        saveInventory()
+
+        ActivityScenario.launch(InventoryManager::class.java).use {
+            // Assert formatted text presence
+            onView(withText(containsString("(2yr)"))).check(matches(isDisplayed()))
+            onView(withText(containsString("(1yr)"))).check(matches(isDisplayed()))
+            onView(withText(containsString("(6mo)"))).check(matches(isDisplayed()))
+            onView(withText(containsString("(1mo)"))).check(matches(isDisplayed()))
+            onView(withText(containsString("(20d)"))).check(matches(isDisplayed()))
+
+            // Check Expired item: Text format AND Highlight (Red)
+            onView(withText(containsString("(-20d)"))).check(matches(isDisplayed()))
+                .check(matches(hasBackgroundColor(R.color.cadmiumRed)))
         }
     }
 
@@ -149,21 +224,21 @@ class DescExpInstrumentedTests {
 
         ActivityScenario.launch(InventoryManager::class.java).use {
             // Check Normal (No Background or White/Transparent)
-            onView(withText(org.hamcrest.Matchers.containsString(futureDate))).check(
+            onView(withText(containsString(futureDate))).check(
                 matches(
                     hasBackgroundColor(null)
                 )
             ) // Assuming null/transparent
 
             // Check Warning (Yellow)
-            onView(withText(org.hamcrest.Matchers.containsString(soonDate))).check(
+            onView(withText(containsString(soonDate))).check(
                 matches(
                     hasBackgroundColor(R.color.warningYellow)
                 )
             )
 
             // Check Expired (Red)
-            onView(withText(org.hamcrest.Matchers.containsString(expiredDate))).check(
+            onView(withText(containsString(expiredDate))).check(
                 matches(
                     hasBackgroundColor(R.color.cadmiumRed)
                 )
@@ -206,6 +281,22 @@ class DescExpInstrumentedTests {
                     return (view.background as android.graphics.drawable.ColorDrawable).color == expectedColor
                 }
                 return false
+            }
+        }
+    }
+
+    private fun hasNoErrorText(): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("has no error text")
+            }
+
+            override fun matchesSafely(view: View): Boolean {
+                return if (view is EditText) {
+                    view.error == null
+                } else {
+                    false
+                }
             }
         }
     }
