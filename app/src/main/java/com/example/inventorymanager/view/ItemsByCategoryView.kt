@@ -18,10 +18,10 @@ import com.example.inventorymanager.databinding.InventoryRowBinding
 import com.example.inventorymanager.databinding.InventoryRowComponentBinding
 import com.example.inventorymanager.utils.FileStorage
 import com.example.inventorymanager.utils.InventoryItemRowInterface
+import com.example.inventorymanager.utils.InventoryViewHelper
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.time.temporal.ChronoUnit
 
 /**
  * View for list of items grouped by their category.
@@ -118,73 +118,74 @@ class ItemsByCategoryView : ConstraintLayout {
 
                 // Handle description truncation
                 val desc = inventoryItem.description
-                itemDescription.text = if (desc.length > 25) "${desc.take(25)}..." else desc
+                itemDescription.text = InventoryViewHelper.getTruncatedDescription(desc)
                 itemDescription.visibility = if (desc.isNotEmpty()) VISIBLE else GONE
 
                 // Handle expiration date logic
                 itemExpiration.visibility = VISIBLE
-                try {
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    val expiryDate = LocalDate.parse(inventoryItem.expirationDate, formatter)
-                    val today = LocalDate.now()
-                    val daysUntil = ChronoUnit.DAYS.between(today, expiryDate)
-                    val monthsUntil = ChronoUnit.MONTHS.between(today, expiryDate)
-                    val yearsUntil = ChronoUnit.YEARS.between(today, expiryDate)
+                if (inventoryItem.expirationDate.isNotEmpty()) {
+                    itemExpiration.visibility = VISIBLE
+                    try {
+                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                        val expiryDate = LocalDate.parse(inventoryItem.expirationDate, formatter)
+                        val today = LocalDate.now()
 
-                    val timeString = when {
-                        kotlin.math.abs(yearsUntil) >= 1 -> "${yearsUntil}yr"
-                        kotlin.math.abs(monthsUntil) >= 1 -> "${monthsUntil}mo"
-                        else -> "${daysUntil}d"
+                        // Calculate the expiration countdown
+                        val timeString =
+                            InventoryViewHelper.getTimeUntilExpiryString(today, expiryDate)
+
+                        // Format the expiration date countdown
+                        itemExpiration.text = context.getString(
+                            R.string.expiration_date_with_countdown,
+                            inventoryItem.expirationDate,
+                            timeString
+                        )
+
+                        // Expiration highlight color logic
+                        val status = InventoryViewHelper.getExpirationStatus(today, expiryDate)
+                        when (status) {
+                            InventoryViewHelper.ExpirationStatus.EXPIRED -> {
+                                itemExpiration.setBackgroundColor(
+                                    ContextCompat.getColor(
+                                        context, R.color.cadmiumRed
+                                    )
+                                )
+                                itemExpiration.setTextColor(
+                                    ContextCompat.getColor(
+                                        context, R.color.white
+                                    )
+                                )
+                            }
+
+                            InventoryViewHelper.ExpirationStatus.WARNING -> {
+                                itemExpiration.setBackgroundColor(
+                                    ContextCompat.getColor(
+                                        context, R.color.warningYellow
+                                    )
+                                )
+                                itemExpiration.setTextColor(
+                                    ContextCompat.getColor(
+                                        context, R.color.black
+                                    )
+                                )
+                            }
+
+                            InventoryViewHelper.ExpirationStatus.NORMAL -> {
+                                itemExpiration.background = null
+                                itemExpiration.setTextColor(
+                                    ContextCompat.getColor(
+                                        context, R.color.black
+                                    )
+                                )
+                            }
+                        }
+
+                    } catch (_: DateTimeParseException) {
+                        itemExpiration.text = inventoryItem.expirationDate
+                        itemExpiration.background = null
                     }
-
-                    itemExpiration.text = context.getString(
-                        R.string.expiration_date_with_countdown,
-                        inventoryItem.expirationDate,
-                        timeString
-                    )
-
-                    // Highlight logic
-                    when {
-                        daysUntil < 0 -> {
-                            // Expired: red background
-                            itemExpiration.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    context, R.color.cadmiumRed
-                                )
-                            )
-                            itemExpiration.setTextColor(
-                                ContextCompat.getColor(
-                                    context, R.color.white
-                                )
-                            )
-                        }
-
-                        daysUntil < 7 -> {
-                            // Expiring in < 1 week: yellow background
-                            itemExpiration.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    context, R.color.warningYellow
-                                )
-                            )
-                            itemExpiration.setTextColor(
-                                ContextCompat.getColor(
-                                    context, R.color.black
-                                )
-                            )
-                        }
-
-                        else -> {
-                            itemExpiration.background = null
-                            itemExpiration.setTextColor(
-                                ContextCompat.getColor(
-                                    context, R.color.black
-                                )
-                            )
-                        }
-                    }
-                } catch (_: DateTimeParseException) {
-                    itemExpiration.text = inventoryItem.expirationDate
-                    itemExpiration.background = null
+                } else {
+                    itemExpiration.visibility = GONE
                 }
 
                 // Click Listeners
