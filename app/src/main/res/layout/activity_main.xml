@@ -47,86 +47,15 @@
         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/inventory_row"/>
 
-    <!-- Source: https://www.geeksforgeeks.org/floating-action-button-fab-in-android-with-example/ -->
-    <!-- Parent Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:contentDescription="@string/parent_floating_action_button"
+        android:contentDescription="@string/add_item"
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Floating action button for manual item entry -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_manual_entry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
-        app:layout_constraintEnd_toEndOf="@+id/fab"
-        app:layout_constraintStart_toStartOf="@+id/fab"
-        app:srcCompat="@drawable/fab_manual_entry"
-        android:contentDescription="@string/manual_entry_floating_action_button"/>
-
-    <TextView
-        android:id="@+id/manual_entry_action_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/manual_entry"
-        app:layout_constraintBottom_toBottomOf="@+id/fab_manual_entry"
-        app:layout_constraintEnd_toStartOf="@+id/fab_manual_entry"
-        app:layout_constraintTop_toTopOf="@+id/fab_manual_entry" />
-
-    <!-- Floating action button for barcode scanner -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_scan_barcode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/fab_manual_entry"
-        app:layout_constraintEnd_toEndOf="@+id/fab_manual_entry"
-        app:layout_constraintStart_toStartOf="@+id/fab_manual_entry"
-        app:srcCompat="@drawable/fab_scan_barcode"
-        android:contentDescription="@string/scan_barcode_floating_action_button" />
-
-    <TextView
-        android:id="@+id/scan_barcode_action_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/scan_barcode"
-        app:layout_constraintBottom_toBottomOf="@+id/fab_scan_barcode"
-        app:layout_constraintEnd_toStartOf="@+id/fab_scan_barcode"
-        app:layout_constraintTop_toTopOf="@+id/fab_scan_barcode" />
-
-    <!-- Floating action button for downloading PDF manifest -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_download_manifest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/fab_scan_barcode"
-        app:layout_constraintEnd_toEndOf="@+id/fab_scan_barcode"
-        app:layout_constraintStart_toStartOf="@+id/fab_scan_barcode"
-        app:srcCompat="@drawable/fab_download_manifest"
-        android:contentDescription="@string/download_manifest_floating_action_button" />
-
-    <TextView
-        android:id="@+id/download_manifest_action_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/download_manifest"
-        app:layout_constraintBottom_toBottomOf="@+id/fab_download_manifest"
-        app:layout_constraintEnd_toStartOf="@+id/fab_download_manifest"
-        app:layout_constraintTop_toTopOf="@+id/fab_download_manifest"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

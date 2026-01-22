@@ -3,7 +3,8 @@ package com.example.inventorymanager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,6 @@ import com.example.inventorymanager.data.Inventory
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ActivityMainBinding
-import com.example.inventorymanager.utils.FabButton
 import com.example.inventorymanager.utils.FileStorage
 import com.example.inventorymanager.utils.PdfGenerator
 import com.example.inventorymanager.utils.StickyHeaderDecoration
@@ -26,14 +26,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class InventoryManager : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var value: TextView
     private lateinit var itemCategoryListAdapter: ItemCategoryListAdapter
     private val inventory: Inventory = Inventory
     private val fileStorage: FileStorage = FileStorage(this)
 
-    // FABs
-    private lateinit var parentFab: FloatingActionButton
-    private var isAllFabsVisible: Boolean? = null
+    // FAB
+    private lateinit var fab: FloatingActionButton
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +59,7 @@ class InventoryManager : AppCompatActivity() {
         // Set RecyclerView adapter
         setupAdapter()
 
-        // Register all FABs and action text
-        // Source: https://www.geeksforgeeks.org/floating-action-button-fab-in-android-with-example/
+        // Set up FAB
         setupFAB()
     }
 
@@ -89,73 +86,42 @@ class InventoryManager : AppCompatActivity() {
     }
 
     /**
-     * Sets up the Floating Action Button (FAB) logic.
-     *
-     * Includes buttons for creating an item entry, generating a PDF inventory manifest, and
-     * scanning items using a barcode.
+     * Sets up the Floating Action Button (FAB) to go directly to manual entry.
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun setupFAB() {
-        parentFab = findViewById(R.id.fab)
-
-        // Register all child FABs and set their on-click effects
-        val childFabs = mutableListOf<FabButton>()
-
-        // Manual entry fab
-        val manualEntryFab = FabButton(
-            findViewById(R.id.fab_manual_entry),
-            findViewById(R.id.manual_entry_action_text)
-        )
-        childFabs.add(manualEntryFab)
-        manualEntryFab.setOnClickListener {
+        fab = findViewById(R.id.fab)
+        fab.setOnClickListener {
             val intent = Intent(this, ItemForm::class.java)
             startActivity(intent)
         }
+    }
 
-        // Scan barcode fab
-        val scanBarcodeFab = FabButton(
-            findViewById(R.id.fab_scan_barcode),
-            findViewById(R.id.scan_barcode_action_text)
-        )
-        childFabs.add(scanBarcodeFab)
-        scanBarcodeFab.setOnClickListener {
-            Toast.makeText(this, "Scan Barcode", Toast.LENGTH_SHORT).show()
-        }
+    /**
+     * Inflate the options menu.
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 
-        // Download manifest fab
-        val downloadManifestFab = FabButton(
-            findViewById(R.id.fab_download_manifest),
-            findViewById(R.id.download_manifest_action_text)
-        )
-        childFabs.add(downloadManifestFab)
-        downloadManifestFab.setOnClickListener {
-            val pdfGenerator = PdfGenerator(this)
-            pdfGenerator.generatePdf(itemCategoryListAdapter.itemData)
-        }
-
-        // Hide FAB action text
-        childFabs.forEach { fab ->
-            fab.hide()
-        }
-
-        // Set boolean
-        isAllFabsVisible = false
-
-        // Parent FAB on-click
-        parentFab.setOnClickListener {
-            (if (!isAllFabsVisible!!) {
-                // Show FABs
-                childFabs.forEach { fab ->
-                    fab.show()
-                }
+    /**
+     * Handle menu item selections.
+     */
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_scan_barcode -> {
+                Toast.makeText(this, "Scan Barcode", Toast.LENGTH_SHORT).show()
                 true
-            } else {
-                // Hide FABs
-                childFabs.forEach { fab ->
-                    fab.hide()
-                }
-                false
-            }).also { isAllFabsVisible = it }
+            }
+
+            R.id.action_download_manifest -> {
+                val pdfGenerator = PdfGenerator(this)
+                pdfGenerator.generatePdf(itemCategoryListAdapter.itemData)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
