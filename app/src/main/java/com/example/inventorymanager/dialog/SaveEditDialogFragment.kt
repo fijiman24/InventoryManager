@@ -30,7 +30,7 @@ class SaveEditDialogFragment : BaseDialogFragment() {
 
             // Replace item passing all new fields
             Inventory.replaceItemById(
-                item.id, data.name, data.stock, data.category, data.description, data.expirationDate
+                item.id, data.name, data.stock, data.location, data.description, data.expirationDate
             )
 
             // Save inventory data

@@ -3,16 +3,16 @@ package com.example.inventorymanager.dialog
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import com.example.inventorymanager.data.InventoryCategories
-import com.example.inventorymanager.databinding.DialogAddCategoryBinding
+import com.example.inventorymanager.data.InventoryLocations
+import com.example.inventorymanager.databinding.DialogAddLocationBinding
 import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
 
 
-class AddItemCategoryDialogFragment : BaseDialogFragment() {
-    private lateinit var binding: DialogAddCategoryBinding
+class AddItemLocationDialogFragment : BaseDialogFragment() {
+    private lateinit var binding: DialogAddLocationBinding
 
-    override fun getTitle(): String = "Enter new category"
+    override fun getTitle(): String = "Enter new location"
 
     override fun getMessage(): String? = null
 
@@ -21,21 +21,21 @@ class AddItemCategoryDialogFragment : BaseDialogFragment() {
     override fun getNegativeButtonText(): String = "Cancel"
 
     override fun onPositiveButtonClick() {
-        // Extract category string
-        val newCategory = binding.category.text.toString()
-        // Add string to categories IFF string is not empty and is not an existing category
-        if (newCategory.isNotEmpty() and
-            !InventoryCategories.categories.contains(newCategory.lowercase())
+        // Extract location string
+        val newLocation = binding.location.text.toString()
+        // Add string to locations IFF string is not empty and is not an existing location
+        if (newLocation.isNotEmpty() and
+            !InventoryLocations.locations.contains(newLocation.lowercase())
         ) {
-            InventoryCategories.categories.add(newCategory.replaceFirstChar {
+            InventoryLocations.locations.add(newLocation.replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(
                     Locale.getDefault()
                 ) else it.toString()
             })
         }
-        // Save new category list to file storage
+        // Save new location list to file storage
         val fileStorage = FileStorage(requireActivity())
-        InventoryCategories.saveCategoriesToFile(fileStorage)
+        InventoryLocations.saveLocationsToFile(fileStorage)
     }
 
     override fun onNegativeButtonClick() {
@@ -43,7 +43,7 @@ class AddItemCategoryDialogFragment : BaseDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = DialogAddCategoryBinding.inflate(layoutInflater)
+        binding = DialogAddLocationBinding.inflate(layoutInflater)
         return super.onCreateDialog(savedInstanceState).also {
             (it as AlertDialog).setView(binding.root)
         }

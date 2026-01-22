@@ -27,8 +27,8 @@ class PdfGenerator(private val context: Context) {
         canvas.drawText("Inventory Report", 50f, 50f, paint)
 
         var y = 100f
-        for ((category, items) in itemData) {
-            canvas.drawText(category, 50f, y, paint)
+        for ((location, items) in itemData) {
+            canvas.drawText(location, 50f, y, paint)
             y += 30f
             for (item in items) {
                 canvas.drawText("${item.name} - ${item.stock}", 100f, y, paint)

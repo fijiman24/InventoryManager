@@ -51,12 +51,12 @@
     <string name="stock">Stock</string>
     <string name="plus">+</string>
     <string name="image_of_item">Image of item</string>
-    <string name="category">Category</string>
+    <string name="location">Location</string>
     <string name="save_button">Save Button</string>
     <string name="delete_button">Delete button</string>
     <string name="edit_image_button">Edit image button</string>
-    <string name="add_item_category_button">Add item category button</string>
-    <string name="reset_categories_button">Reset categories button</string>
+    <string name="add_item_location_button">Add item location button</string>
+    <string name="reset_locations_button">Reset locations button</string>
     <string name="increment_item_stock">Increment item stock</string>
     <string name="decrement_item_stock">Decrement item stock</string>
     <string name="parent_floating_action_button">Parent floating action button</string>
@@ -66,7 +66,7 @@
     <string name="manual_entry_floating_action_button">Manual entry floating action button</string>
     <string name="download_manifest">Download Manifest</string>
     <string name="download_manifest_floating_action_button">Download manifest floating action button</string>
-    <string-array name="inventory_category_array">
+    <string-array name="inventory_location_array">
         <item>Storage</item>
         <item>Fridge</item>
         <item>Freezer</item>

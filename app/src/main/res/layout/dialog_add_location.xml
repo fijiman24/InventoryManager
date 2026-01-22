@@ -5,15 +5,15 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/category"
+        android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="4dp"
-        android:autofillHints="@string/category"
-        android:hint="@string/category"
+        android:autofillHints="@string/location"
+        android:hint="@string/location"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:textColorHint="#A1887F" />

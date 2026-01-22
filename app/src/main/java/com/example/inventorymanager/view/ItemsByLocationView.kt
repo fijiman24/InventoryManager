@@ -24,9 +24,9 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 /**
- * View for list of items grouped by their category.
+ * View for list of items grouped by their location.
  */
-class ItemsByCategoryView : ConstraintLayout {
+class ItemsByLocationView : ConstraintLayout {
     private lateinit var binding: InventoryRowComponentBinding
     private lateinit var inventoryRowBinding: InventoryRowBinding
     private lateinit var adapter: InventoryItemAdapter

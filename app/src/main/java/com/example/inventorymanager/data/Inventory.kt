@@ -30,7 +30,7 @@ object Inventory {
         itemId: String,
         newItemName: String,
         newItemStock: Int,
-        newItemCategory: String,
+        newItemLocation: String,
         newItemDescription: String,
         newItemExpiration: String
     ) {
@@ -40,7 +40,7 @@ object Inventory {
             val editedItem = InventoryItem(
                 name = newItemName,
                 stock = newItemStock,
-                category = newItemCategory,
+                location = newItemLocation,
                 description = newItemDescription,
                 expirationDate = newItemExpiration,
                 id = itemId

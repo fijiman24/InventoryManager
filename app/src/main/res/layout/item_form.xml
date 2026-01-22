@@ -72,11 +72,11 @@
             android:textColorHint="#546E7A" />
 
         <TextView
-            android:id="@+id/itemCategoryLabel"
+            android:id="@+id/itemLocationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/category" />
+            android:text="@string/location" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,25 +84,25 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/itemCategorySpinner"
+                android:id="@+id/itemLocationSpinner"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/addCategoryButton"
+                android:id="@+id/addLocationButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/purplePrimary"
-                android:contentDescription="@string/add_item_category_button"
+                android:contentDescription="@string/add_item_location_button"
                 android:src="@android:drawable/ic_input_add" />
 
             <ImageButton
-                android:id="@+id/resetCategoryButton"
+                android:id="@+id/resetLocationButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/purplePrimary"
-                android:contentDescription="@string/reset_categories_button"
+                android:contentDescription="@string/reset_locations_button"
                 android:src="@drawable/button_reset" />
         </LinearLayout>
 

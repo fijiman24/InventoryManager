@@ -12,7 +12,7 @@ import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inventorymanager.data.Inventory
-import com.example.inventorymanager.data.InventoryCategories
+import com.example.inventorymanager.data.InventoryLocations
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ActivityMainBinding
 import com.example.inventorymanager.utils.FileStorage
@@ -26,7 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class InventoryManager : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var itemCategoryListAdapter: ItemCategoryListAdapter
+    private lateinit var itemLocationListAdapter: ItemLocationListAdapter
     private val inventory: Inventory = Inventory
     private val fileStorage: FileStorage = FileStorage(this)
 
@@ -45,10 +45,10 @@ class InventoryManager : AppCompatActivity() {
         // Retrieve any saved inventory from internal storage
         Inventory.items = fileStorage.getInventoryFromFile("inventoryFile")
 
-        // Retrieve saved categories from internal storage
-        InventoryCategories.categories = fileStorage.getCategoriesFromFile("categoriesFile")
-        if (InventoryCategories.categories.isEmpty()) {
-            InventoryCategories.initializeWithDefaultCategories()
+        // Retrieve saved locations from internal storage
+        InventoryLocations.locations = fileStorage.getLocationsFromFile("locationsFile")
+        if (InventoryLocations.locations.isEmpty()) {
+            InventoryLocations.initializeWithDefaultLocations()
         }
 
         // Remove empty message if there are items
@@ -67,20 +67,20 @@ class InventoryManager : AppCompatActivity() {
      * Sets up the RecyclerView adapter for showing the inventory items.
      */
     private fun setupAdapter() {
-        itemCategoryListAdapter = ItemCategoryListAdapter()
+        itemLocationListAdapter = ItemLocationListAdapter()
         val recyclerView: RecyclerView = binding.rvInventoryItems
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = itemCategoryListAdapter
+        recyclerView.adapter = itemLocationListAdapter
 
-        // Group items by category
+        // Group items by location
         val groupedItems: Map<String, List<InventoryItem>> =
-            inventory.items.groupBy { item -> item.category }.toSortedMap()
-        itemCategoryListAdapter.itemData = groupedItems.toSortedMap()
+            inventory.items.groupBy { item -> item.location }.toSortedMap()
+        itemLocationListAdapter.itemData = groupedItems.toSortedMap()
 
         // Sticky headers
         recyclerView.addItemDecoration(
             StickyHeaderDecoration(
-                itemCategoryListAdapter, binding.root
+                itemLocationListAdapter, binding.root
             )
         )
     }
@@ -117,7 +117,7 @@ class InventoryManager : AppCompatActivity() {
 
             R.id.action_download_manifest -> {
                 val pdfGenerator = PdfGenerator(this)
-                pdfGenerator.generatePdf(itemCategoryListAdapter.itemData)
+                pdfGenerator.generatePdf(itemLocationListAdapter.itemData)
                 true
             }
 

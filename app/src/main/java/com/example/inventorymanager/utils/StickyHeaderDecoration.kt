@@ -10,17 +10,18 @@ import android.view.View.MeasureSpec
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
-import com.example.inventorymanager.ItemCategoryListAdapter
+import com.example.inventorymanager.ItemLocationListAdapter
 import com.example.inventorymanager.databinding.StickyHeaderBinding
+import androidx.core.graphics.withSave
 
 /**
- * Sticky header for item categories.
+ * Sticky header for item locations.
  *
  * Source:
  * https://medium.com/swlh/android-recyclerview-stickyheader-without-external-library-25845ec3e20f
  * https://github.com/bigyanthapa/Sample-Sticky-Header
  */
-class StickyHeaderDecoration(private val adapter: ItemCategoryListAdapter, root: View) :
+class StickyHeaderDecoration(private val adapter: ItemLocationListAdapter, root: View) :
     ItemDecoration() {
     private val headerBinding by lazy { StickyHeaderBinding.inflate(LayoutInflater.from(root.context)) }
     private val headerView: View get() = headerBinding.root
@@ -59,10 +60,10 @@ class StickyHeaderDecoration(private val adapter: ItemCategoryListAdapter, root:
      * Draw a header view above other content
      */
     private fun Canvas.drawHeaderView(topView: View?, secondChild: View?) {
-        save()
-        translate(0f, calculateHeaderTop(topView, secondChild))
-        headerView.draw(this)
-        restore()
+        withSave {
+            translate(0f, calculateHeaderTop(topView, secondChild))
+            headerView.draw(this)
+        }
     }
 
     /**

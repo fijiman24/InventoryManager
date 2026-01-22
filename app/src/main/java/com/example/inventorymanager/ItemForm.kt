@@ -10,11 +10,11 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.inventorymanager.data.Inventory
-import com.example.inventorymanager.data.InventoryCategories
+import com.example.inventorymanager.data.InventoryLocations
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ItemFormBinding
-import com.example.inventorymanager.dialog.AddItemCategoryDialogFragment
-import com.example.inventorymanager.dialog.ResetItemCategoriesDialogFragment
+import com.example.inventorymanager.dialog.AddItemLocationDialogFragment
+import com.example.inventorymanager.dialog.ResetItemLocationsDialogFragment
 import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
 
@@ -35,20 +35,20 @@ class ItemForm : AppCompatActivity() {
         // Set initial on-click for save button
         binding.saveButton.setOnClickListener { saveNewItem() }
 
-        // Set on-click for add category button
-        binding.addCategoryButton.setOnClickListener { openAddCategoryDialog() }
+        // Set on-click for add location button
+        binding.addLocationButton.setOnClickListener { openAddLocationDialog() }
 
-        // Set on-click for reset categories button
-        binding.resetCategoryButton.setOnClickListener { openResetCategoriesDialog() }
+        // Set on-click for reset locations button
+        binding.resetLocationButton.setOnClickListener { openResetLocationsDialog() }
 
         // Set expiration date field to show date picker spinner
         binding.editItemExpirationDate.isFocusable = false  // Ensures keyboard doesn't appear
         binding.editItemExpirationDate.setOnClickListener { showDatePicker() }
 
         // Populate spinner with options
-        val spinner: Spinner = findViewById(R.id.itemCategorySpinner)
+        val spinner: Spinner = findViewById(R.id.itemLocationSpinner)
         val adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, InventoryCategories.categories)
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, InventoryLocations.locations)
         spinner.adapter = adapter
 
         // If there's an item, populate the text fields
@@ -60,10 +60,10 @@ class ItemForm : AppCompatActivity() {
             binding.editItemDescription.setText(itemToEdit.description)
             binding.editItemExpirationDate.setText(itemToEdit.expirationDate)
 
-            // Set category spinner
-            val categories = resources.getStringArray(R.array.inventory_category_array)
-            val categoryIndex = categories.indexOf(itemToEdit.category)
-            binding.itemCategorySpinner.setSelection(categoryIndex)
+            // Set location spinner
+            val locations = resources.getStringArray(R.array.inventory_location_array)
+            val locationIndex = locations.indexOf(itemToEdit.location)
+            binding.itemLocationSpinner.setSelection(locationIndex)
 
             // Set on-click for delete button
             binding.deleteButton.setOnClickListener { deleteItem(itemToEdit) }
@@ -141,8 +141,8 @@ class ItemForm : AppCompatActivity() {
         val itemStockAmount =
             if (itemStockAmountString.isNotEmpty()) itemStockAmountString.toInt() else 0
 
-        // Category
-        val itemCategory = binding.itemCategorySpinner.selectedItem.toString()
+        // Location
+        val itemLocation = binding.itemLocationSpinner.selectedItem.toString()
 
         // Description
         val itemDescription = binding.editItemDescription.text.toString()
@@ -151,7 +151,7 @@ class ItemForm : AppCompatActivity() {
         val itemExpiration = binding.editItemExpirationDate.text.toString()
 
         return InventoryItemData(
-            itemName, itemStockAmount, itemCategory, itemDescription, itemExpiration
+            itemName, itemStockAmount, itemLocation, itemDescription, itemExpiration
         )
     }
 
@@ -161,7 +161,7 @@ class ItemForm : AppCompatActivity() {
     data class InventoryItemData(
         val name: String,
         val stock: Int,
-        val category: String,
+        val location: String,
         val description: String,
         val expirationDate: String
     )
@@ -177,7 +177,7 @@ class ItemForm : AppCompatActivity() {
             // Add item to inventory list
             Inventory.items.add(
                 InventoryItem(
-                    data.name, data.stock, data.category, data.description, data.expirationDate
+                    data.name, data.stock, data.location, data.description, data.expirationDate
                 )
             )
 
@@ -207,7 +207,7 @@ class ItemForm : AppCompatActivity() {
 
             // Replace item passing all new fields
             Inventory.replaceItemById(
-                item.id, data.name, data.stock, data.category, data.description, data.expirationDate
+                item.id, data.name, data.stock, data.location, data.description, data.expirationDate
             )
 
             // Save inventory data
@@ -246,16 +246,16 @@ class ItemForm : AppCompatActivity() {
     }
 
     /**
-     * Open the add category alert dialog.
+     * Open the add location alert dialog.
      */
-    private fun openAddCategoryDialog() {
-        AddItemCategoryDialogFragment().show(supportFragmentManager, "ADD_CATEGORY_DIALOG")
+    private fun openAddLocationDialog() {
+        AddItemLocationDialogFragment().show(supportFragmentManager, "ADD_LOCATION_DIALOG")
     }
 
     /**
-     * Open the reset categories alert dialog.
+     * Open the reset locations alert dialog.
      */
-    private fun openResetCategoriesDialog() {
-        ResetItemCategoriesDialogFragment().show(supportFragmentManager, "RESET_CATEGORIES_DIALOG")
+    private fun openResetLocationsDialog() {
+        ResetItemLocationsDialogFragment().show(supportFragmentManager, "RESET_LOCATIONS_DIALOG")
     }
 }

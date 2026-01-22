@@ -58,9 +58,9 @@ class FileStorage(private val context: Context) {
     }
 
     /**
-     * Save category list to internal storage.
+     * Save location list to internal storage.
      */
-    fun saveCategoriesToFile(list: MutableList<String>, fileName: String) {
+    fun saveLocationsToFile(list: MutableList<String>, fileName: String) {
         try {
             val fileOutputStream = getFileOutputStream(fileName)
             val objectOutputStream = ObjectOutputStream(fileOutputStream)
@@ -77,9 +77,9 @@ class FileStorage(private val context: Context) {
     }
 
     /**
-     * Read a category list from internal storage.
+     * Read a location list from internal storage.
      */
-    fun getCategoriesFromFile(fileName: String): MutableList<String> {
+    fun getLocationsFromFile(fileName: String): MutableList<String> {
         val resultList: MutableList<String> = mutableListOf()
 
         try {

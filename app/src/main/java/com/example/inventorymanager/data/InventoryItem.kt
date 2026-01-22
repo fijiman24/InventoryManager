@@ -8,14 +8,14 @@ import java.util.UUID
  *
  * @param name name of item
  * @param stock amount of item
- * @param category category of item
+ * @param location location of item
  * @param description description of item
  * @param expirationDate expiration date of item in yyyy-mm-dd format
  */
 class InventoryItem(
     val name: String,
     var stock: Int,
-    var category: String,
+    var location: String,
     var description: String = "",
     var expirationDate: String,
     val id: String = UUID.randomUUID().toString(),
