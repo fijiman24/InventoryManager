@@ -4,26 +4,24 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.DatePicker
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.inventorymanager.data.Inventory
-import com.example.inventorymanager.data.InventoryLocations
 import com.example.inventorymanager.data.InventoryItem
+import com.example.inventorymanager.data.InventoryLocations
 import com.example.inventorymanager.databinding.ItemFormBinding
-import com.example.inventorymanager.dialog.AddItemLocationDialogFragment
-import com.example.inventorymanager.dialog.ResetItemLocationsDialogFragment
 import com.example.inventorymanager.utils.FileStorage
+import com.example.inventorymanager.view.SearchableSelectorView
 import java.util.Locale
 
 /**
  * Form for adding a new inventory item.
  */
-class ItemForm : AppCompatActivity() {
+class ItemForm : AppCompatActivity(), SearchableSelectorView.SearchableSelectionPopupListener {
     private lateinit var binding: ItemFormBinding
     internal val fileStorage = FileStorage(this)
+    private var selectionPopup: SearchableSelectorView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set view
@@ -35,21 +33,13 @@ class ItemForm : AppCompatActivity() {
         // Set initial on-click for save button
         binding.saveButton.setOnClickListener { saveNewItem() }
 
-        // Set on-click for add location button
-        binding.addLocationButton.setOnClickListener { openAddLocationDialog() }
+        // Open the popup when the selector is clicked
+        binding.itemLocationSelector.setOnClickListener { view ->
+            openLocationSelector(view)
+        }
 
-        // Set on-click for reset locations button
-        binding.resetLocationButton.setOnClickListener { openResetLocationsDialog() }
-
-        // Set expiration date field to show date picker spinner
-        binding.editItemExpirationDate.isFocusable = false  // Ensures keyboard doesn't appear
+        binding.editItemExpirationDate.isFocusable = false
         binding.editItemExpirationDate.setOnClickListener { showDatePicker() }
-
-        // Populate spinner with options
-        val spinner: Spinner = findViewById(R.id.itemLocationSpinner)
-        val adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, InventoryLocations.locations)
-        spinner.adapter = adapter
 
         // If there's an item, populate the text fields
         val itemToEdit = intent.getSerializableExtra("item") as? InventoryItem
@@ -59,13 +49,7 @@ class ItemForm : AppCompatActivity() {
             binding.editItemStock.setText(itemToEdit.stock.toString())
             binding.editItemDescription.setText(itemToEdit.description)
             binding.editItemExpirationDate.setText(itemToEdit.expirationDate)
-
-            // Set location spinner
-            val locations = resources.getStringArray(R.array.inventory_location_array)
-            val locationIndex = locations.indexOf(itemToEdit.location)
-            binding.itemLocationSpinner.setSelection(locationIndex)
-
-            // Set on-click for delete button
+            binding.itemLocationSelector.setText(itemToEdit.location)
             binding.deleteButton.setOnClickListener { deleteItem(itemToEdit) }
 
             // Replace on-click for save button
@@ -73,12 +57,54 @@ class ItemForm : AppCompatActivity() {
         } else {
             // Remove delete item button
             binding.deleteButton.visibility = View.GONE
+            if (InventoryLocations.locations.isNotEmpty()) {
+                binding.itemLocationSelector.setText(InventoryLocations.locations[0])
+            }
         }
     }
 
-    /**
-     * Show the date picker spinner.
-     */
+    // Searchable Selector
+    private fun openLocationSelector(anchorView: View) {
+        // Initialize and show the popup
+        selectionPopup = SearchableSelectorView(
+            this, ArrayList(InventoryLocations.locations), this
+        )
+        selectionPopup?.show(anchorView)
+    }
+
+    override fun onItemSelect(item: String) {
+        binding.itemLocationSelector.setText(item)
+    }
+
+    override fun onItemAdd(item: String) {
+        if (!InventoryLocations.locations.contains(item)) {
+            InventoryLocations.locations.add(item)
+            InventoryLocations.saveLocationsToFile(fileStorage)
+        }
+        binding.itemLocationSelector.setText(item)
+    }
+
+    override fun onItemDelete(item: String) {
+        val count = Inventory.items.count { it.location == item }
+
+        // Cannot delete locations with items mapped
+        if (count > 0) {
+            AlertDialog.Builder(this).setTitle("Cannot Delete Location")
+                .setMessage("There are currently $count items in that location. To delete the location, please rehouse those items.")
+                .setPositiveButton("OK", null).show()
+        } else {
+            InventoryLocations.locations.remove(item)
+            InventoryLocations.saveLocationsToFile(fileStorage)
+
+            // Update the selector
+            selectionPopup?.confirmDeletion(item)
+
+            if (binding.itemLocationSelector.text.toString() == item) {
+                binding.itemLocationSelector.setText("")
+            }
+        }
+    }
+
     private fun showDatePicker() {
         // Inflate the custom layout
         val dialogView = layoutInflater.inflate(R.layout.date_picker_spinner, null)
@@ -91,14 +117,9 @@ class ItemForm : AppCompatActivity() {
             val day = datePicker.dayOfMonth
 
             // Format date as yyyy-mm-dd
-            val formattedDate =
-                String.format(
-                    Locale.getDefault(),
-                    format = "%d-%02d-%02d",
-                    year,
-                    month + 1,
-                    day
-                ) // Month is 0-indexed, so we add 1
+            val formattedDate = String.format(
+                Locale.getDefault(), format = "%d-%02d-%02d", year, month + 1, day
+            ) // Month is 0-indexed, so we add 1
             binding.editItemExpirationDate.setText(formattedDate)
         }.setNegativeButton("Cancel", null).show()
     }
@@ -125,6 +146,11 @@ class ItemForm : AppCompatActivity() {
             return false
         }
 
+        // Location
+        if (binding.itemLocationSelector.length() == 0) {
+            binding.itemLocationSelector.error = "This field is required"
+            return false
+        }
         return true
     }
 
@@ -142,7 +168,7 @@ class ItemForm : AppCompatActivity() {
             if (itemStockAmountString.isNotEmpty()) itemStockAmountString.toInt() else 0
 
         // Location
-        val itemLocation = binding.itemLocationSpinner.selectedItem.toString()
+        val itemLocation = binding.itemLocationSelector.text.toString()
 
         // Description
         val itemDescription = binding.editItemDescription.text.toString()
@@ -243,19 +269,5 @@ class ItemForm : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         finish()
-    }
-
-    /**
-     * Open the add location alert dialog.
-     */
-    private fun openAddLocationDialog() {
-        AddItemLocationDialogFragment().show(supportFragmentManager, "ADD_LOCATION_DIALOG")
-    }
-
-    /**
-     * Open the reset locations alert dialog.
-     */
-    private fun openResetLocationsDialog() {
-        ResetItemLocationsDialogFragment().show(supportFragmentManager, "RESET_LOCATIONS_DIALOG")
     }
 }
