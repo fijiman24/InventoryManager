@@ -31,6 +31,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
+        <TextView
+            android:id="@+id/itemNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_name_input_hint" />
+
         <EditText
             android:id="@+id/editItemName"
             android:layout_width="match_parent"
@@ -40,6 +46,13 @@
             android:inputType="text"
             android:minHeight="48dp"
             android:textColorHint="#546E7A" />
+
+        <TextView
+            android:id="@+id/itemDescriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/description_input_hint" />
 
         <EditText
             android:id="@+id/editItemDescription"
@@ -51,6 +64,13 @@
             android:minHeight="48dp"
             android:textColorHint="#546E7A" />
 
+        <TextView
+            android:id="@+id/itemExpirationDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/expiration_date_input_hint" />
+
         <EditText
             android:id="@+id/editItemExpirationDate"
             android:layout_width="match_parent"
@@ -60,6 +80,13 @@
             android:inputType="date"
             android:minHeight="48dp"
             android:textColorHint="#546E7A" />
+
+        <TextView
+            android:id="@+id/itemStockLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/stock" />
 
         <EditText
             android:id="@+id/editItemStock"
@@ -78,34 +105,18 @@
             android:layout_marginTop="16dp"
             android:text="@string/location" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/itemLocationSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/itemLocationSpinner"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/addLocationButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:backgroundTint="@color/purplePrimary"
-                android:contentDescription="@string/add_item_location_button"
-                android:src="@android:drawable/ic_input_add" />
-
-            <ImageButton
-                android:id="@+id/resetLocationButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:backgroundTint="@color/purplePrimary"
-                android:contentDescription="@string/reset_locations_button"
-                android:src="@drawable/button_reset" />
-        </LinearLayout>
-
+            android:autofillHints="@string/location"
+            android:clickable="true"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:focusable="false"
+            android:hint="@string/location"
+            android:inputType="none"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A" />
     </LinearLayout>
 
     <ImageButton

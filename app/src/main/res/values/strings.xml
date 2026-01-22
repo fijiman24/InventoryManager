@@ -77,4 +77,7 @@
     <string name="item_name_input_hint">Item Name</string>
     <string name="description_input_hint">Description (optional)</string>
     <string name="expiration_date_input_hint">Expiration Date (yyyy-mm-dd)</string>
+    <string name="search_placeholder">Search…</string>
+    <string name="action">Action</string>
+    <string name="add_selector_item_format">Add \"%1$s\"</string>
 </resources>
