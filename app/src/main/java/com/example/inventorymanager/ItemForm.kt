@@ -1,20 +1,20 @@
 package com.example.inventorymanager
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.inventorymanager.data.Inventory
 import com.example.inventorymanager.data.InventoryCategories
 import com.example.inventorymanager.data.InventoryItem
 import com.example.inventorymanager.databinding.ItemFormBinding
 import com.example.inventorymanager.dialog.AddItemCategoryDialogFragment
-import com.example.inventorymanager.dialog.DeleteItemDialogFragment
 import com.example.inventorymanager.dialog.ResetItemCategoriesDialogFragment
-import com.example.inventorymanager.dialog.SaveEditDialogFragment
-import com.example.inventorymanager.dialog.SaveNewItemDialogFragment
 import com.example.inventorymanager.utils.FileStorage
 import java.util.Locale
 
@@ -92,7 +92,13 @@ class ItemForm : AppCompatActivity() {
 
             // Format date as yyyy-mm-dd
             val formattedDate =
-                String.format(Locale.getDefault(), format="%d-%02d-%02d", year, month + 1, day) // Month is 0-indexed, so we add 1
+                String.format(
+                    Locale.getDefault(),
+                    format = "%d-%02d-%02d",
+                    year,
+                    month + 1,
+                    day
+                ) // Month is 0-indexed, so we add 1
             binding.editItemExpirationDate.setText(formattedDate)
         }.setNegativeButton("Cancel", null).show()
     }
@@ -166,7 +172,27 @@ class ItemForm : AppCompatActivity() {
     private fun saveNewItem() {
         // Make sure required fields are filled
         if (checkAllFields()) {
-            SaveNewItemDialogFragment().show(supportFragmentManager, "SAVE_NEW_ITEM_DIALOG")
+            val data = returnItemData()
+
+            // Add item to inventory list
+            Inventory.items.add(
+                InventoryItem(
+                    data.name, data.stock, data.category, data.description, data.expirationDate
+                )
+            )
+
+            // Save inventory data
+            Inventory.saveInventoryToFile(fileStorage)
+
+            // Feedback
+            Toast.makeText(this, "${data.name} has been saved!", Toast.LENGTH_SHORT).show()
+
+            // Return to MainActivity
+            val intent = Intent(this, InventoryManager::class.java)
+            // Use FLAG_ACTIVITY_CLEAR_TOP to prevent stacking multiple InventoryManager instances
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -177,8 +203,24 @@ class ItemForm : AppCompatActivity() {
      */
     private fun saveEdit(item: InventoryItem) {
         if (checkAllFields()) {
-            SaveEditDialogFragment.newInstance(item)
-                .show(supportFragmentManager, "SAVE_EDIT_DIALOG")
+            val data = returnItemData()
+
+            // Replace item passing all new fields
+            Inventory.replaceItemById(
+                item.id, data.name, data.stock, data.category, data.description, data.expirationDate
+            )
+
+            // Save inventory data
+            Inventory.saveInventoryToFile(fileStorage)
+
+            // Feedback
+            Toast.makeText(this, "${data.name} has been saved!", Toast.LENGTH_SHORT).show()
+
+            // Return to MainActivity
+            val intent = Intent(this, InventoryManager::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -188,8 +230,19 @@ class ItemForm : AppCompatActivity() {
      * @param item copy of item to delete from inventory
      */
     private fun deleteItem(item: InventoryItem) {
-        DeleteItemDialogFragment.newInstance(item)
-            .show(supportFragmentManager, "DELETE_ITEM_DIALOG")
+        Inventory.removeItemById(item.id)
+
+        // Save inventory data
+        Inventory.saveInventoryToFile(fileStorage)
+
+        // Feedback
+        Toast.makeText(this, "${item.name} has been deleted!", Toast.LENGTH_SHORT).show()
+
+        // Return to MainActivity
+        val intent = Intent(this, InventoryManager::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
     /**
