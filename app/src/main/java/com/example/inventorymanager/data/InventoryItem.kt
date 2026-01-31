@@ -11,6 +11,7 @@ import java.util.UUID
  * @param location location of item
  * @param description description of item
  * @param expirationDate expiration date of item in yyyy-mm-dd format
+ * @param tags list of semantic tags associated with the item
  */
 class InventoryItem(
     val name: String,
@@ -18,6 +19,7 @@ class InventoryItem(
     var location: String,
     var description: String = "",
     var expirationDate: String,
+    var tags: MutableList<String> = mutableListOf(),
     val id: String = UUID.randomUUID().toString(),
 ) : Serializable {
     /**

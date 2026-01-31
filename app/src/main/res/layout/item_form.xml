@@ -117,6 +117,32 @@
             android:inputType="none"
             android:minHeight="48dp"
             android:textColorHint="#546E7A" />
+
+        <TextView
+            android:id="@+id/itemTagsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/tags" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/tagChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/itemTagSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Add Tag"
+            android:clickable="true"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:focusable="false"
+            android:hint="@string/add_tag"
+            android:inputType="none"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A" />
     </LinearLayout>
 
     <ImageButton

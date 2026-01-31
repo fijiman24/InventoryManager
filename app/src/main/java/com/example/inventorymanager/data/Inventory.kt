@@ -32,7 +32,8 @@ object Inventory {
         newItemStock: Int,
         newItemLocation: String,
         newItemDescription: String,
-        newItemExpiration: String
+        newItemExpiration: String,
+        newItemTags: MutableList<String>
     ) {
         val existingItemIndex = items.indexOfFirst { it.id == itemId }
         if (existingItemIndex != -1) {
@@ -43,6 +44,7 @@ object Inventory {
                 location = newItemLocation,
                 description = newItemDescription,
                 expirationDate = newItemExpiration,
+                tags = newItemTags,
                 id = itemId
             )
             items[existingItemIndex] = editedItem

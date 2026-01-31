@@ -12,8 +12,9 @@ import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inventorymanager.data.Inventory
-import com.example.inventorymanager.data.InventoryLocations
 import com.example.inventorymanager.data.InventoryItem
+import com.example.inventorymanager.data.InventoryLocations
+import com.example.inventorymanager.data.InventoryTags
 import com.example.inventorymanager.databinding.ActivityMainBinding
 import com.example.inventorymanager.utils.FileStorage
 import com.example.inventorymanager.utils.PdfGenerator
@@ -50,6 +51,9 @@ class InventoryManager : AppCompatActivity() {
         if (InventoryLocations.locations.isEmpty()) {
             InventoryLocations.initializeWithDefaultLocations()
         }
+
+        // Retrieve saved tags from internal storage
+        InventoryTags.tags = fileStorage.getTagsFromFile("tagsFile")
 
         // Remove empty message if there are items
         if (inventory.items.isNotEmpty()) {

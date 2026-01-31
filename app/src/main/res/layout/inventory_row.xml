@@ -79,4 +79,17 @@
         app:layout_constraintTop_toBottomOf="@+id/itemDescription"
         tools:text="2025-12-15 (2yr)" />
 
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/itemTags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        app:chipMinHeight="32dp"
+        app:chipSpacing="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/controlsLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemExpiration"
+        tools:visibility="visible">
+    </com.google.android.material.chip.ChipGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

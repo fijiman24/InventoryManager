@@ -30,7 +30,13 @@ class SaveEditDialogFragment : BaseDialogFragment() {
 
             // Replace item passing all new fields
             Inventory.replaceItemById(
-                item.id, data.name, data.stock, data.location, data.description, data.expirationDate
+                item.id,
+                data.name,
+                data.stock,
+                data.location,
+                data.description,
+                data.expirationDate,
+                data.tags
             )
 
             // Save inventory data
@@ -44,15 +50,5 @@ class SaveEditDialogFragment : BaseDialogFragment() {
 
     override fun onNegativeButtonClick() {
         dialog?.cancel()
-    }
-
-    companion object {
-        fun newInstance(item: InventoryItem): SaveEditDialogFragment {
-            val fragment = SaveEditDialogFragment()
-            val args = Bundle()
-            args.putSerializable("item", item)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

@@ -19,6 +19,7 @@ import com.example.inventorymanager.databinding.InventoryRowComponentBinding
 import com.example.inventorymanager.utils.FileStorage
 import com.example.inventorymanager.utils.InventoryItemRowInterface
 import com.example.inventorymanager.utils.InventoryViewHelper
+import com.google.android.material.chip.Chip
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -120,6 +121,36 @@ class ItemsByLocationView : ConstraintLayout {
                 val desc = inventoryItem.description
                 itemDescription.text = InventoryViewHelper.getTruncatedDescription(desc)
                 itemDescription.visibility = if (desc.isNotEmpty()) VISIBLE else GONE
+
+                // Handle Tags using Chips
+                itemTags.removeAllViews() // Clear previous views for this reused row
+                if (inventoryItem.tags.isNotEmpty()) {
+                    itemTags.visibility = VISIBLE
+
+                    // Show max 3 tags, then ellipsis
+                    val maxTags = 3
+                    val tagsToShow = inventoryItem.tags.take(maxTags)
+
+                    for (tag in tagsToShow) {
+                        val chip = Chip(context)
+                        chip.text = tag
+                        chip.isClickable = false
+                        chip.isCheckable = false
+                        chip.setEnsureMinTouchTargetSize(false)
+                        itemTags.addView(chip)
+                    }
+
+                    if (inventoryItem.tags.size > maxTags) {
+                        val ellipsisChip = Chip(context)
+                        ellipsisChip.text = "..."
+                        ellipsisChip.isClickable = false
+                        ellipsisChip.isCheckable = false
+                        ellipsisChip.setEnsureMinTouchTargetSize(false)
+                        itemTags.addView(ellipsisChip)
+                    }
+                } else {
+                    itemTags.visibility = GONE
+                }
 
                 // Handle expiration date logic
                 itemExpiration.visibility = VISIBLE

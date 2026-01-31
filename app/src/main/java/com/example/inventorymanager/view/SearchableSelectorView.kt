@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,10 @@ import java.util.Locale
  * View for a list of selectable items, filtered using a search bar inside a Modal Dialog.
  */
 class SearchableSelectorView(
-    context: Context, items: ArrayList<String>, listener: SearchableSelectionPopupListener
+    context: Context,
+    items: ArrayList<String>,
+    listener: SearchableSelectionPopupListener,
+    maxLength: Int? = null
 ) {
 
     interface SearchableSelectionPopupListener {
@@ -42,6 +46,11 @@ class SearchableSelectorView(
         val view = LayoutInflater.from(context).inflate(R.layout.searchable_selector_popup, null)
         val searchBar = view.findViewById<EditText>(R.id.searchBar)
         val recyclerView = view.findViewById<RecyclerView>(R.id.selectionList)
+
+        // Apply max length filter if provided
+        if (maxLength != null) {
+            searchBar.filters = arrayOf(InputFilter.LengthFilter(maxLength))
+        }
 
         // Setup adapter
         adapter = SearchableSelectionAdapter(ArrayList(items), listener)

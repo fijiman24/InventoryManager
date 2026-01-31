@@ -23,7 +23,12 @@ class SaveNewItemDialogFragment : BaseDialogFragment() {
             // Add item to inventory list
             Inventory.items.add(
                 InventoryItem(
-                    data.name, data.stock, data.location, data.description, data.expirationDate
+                    data.name,
+                    data.stock,
+                    data.location,
+                    data.description,
+                    data.expirationDate,
+                    data.tags
                 )
             )
 

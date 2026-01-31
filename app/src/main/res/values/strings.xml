@@ -80,4 +80,6 @@
     <string name="search_placeholder">Search…</string>
     <string name="action">Action</string>
     <string name="add_selector_item_format">Add \"%1$s\"</string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Add Tag…</string>
 </resources>
