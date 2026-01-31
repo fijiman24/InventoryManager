@@ -107,7 +107,6 @@ class DescExpInstrumentedTests {
         ActivityScenario.launch(InventoryManager::class.java).use {
             // Navigate to Manual Entry Form
             onView(withId(R.id.fab)).perform(click())
-            onView(withId(R.id.fab_manual_entry)).perform(click())
 
             // Fill required fields (Name & Stock) but leave Description and Expiration Date empty
             onView(withId(R.id.editItemName)).perform(typeText("Milk"), closeSoftKeyboard())
@@ -128,7 +127,6 @@ class DescExpInstrumentedTests {
     fun savingItem_requiresExpirationDate() {
         ActivityScenario.launch(InventoryManager::class.java).use {
             onView(withId(R.id.fab)).perform(click())
-            onView(withId(R.id.fab_manual_entry)).perform(click())
 
             onView(withId(R.id.editItemName)).perform(typeText("Milk"), closeSoftKeyboard())
             onView(withId(R.id.editItemStock)).perform(typeText("1"), closeSoftKeyboard())
